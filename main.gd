@@ -16,13 +16,13 @@ func _ready() -> void:
 	# have not enalbed XR in settings.
 	xr_interface = XRServer.find_interface("OpenXR") as OpenXRInterface
 	if xr_interface == null:
-		push_error("Main|FATAL: OpenXR interface not found. Check Project Settings -> XR")
+		print("Main|INFO: no OpenXR interface (e.g. macOS), running in desktop mode")
 		return
 
 	# Here we check if the xr interface *is* setup but not initialized. This indicates the device is ready to use a headset,
 	# but there is no detected/connected headset.
 	if not xr_interface.is_initialized() and not xr_interface.initialize():
-		push_error("Main|FATAL: OpenXR failed to initialise, headset connected?")
+		print("Main|INFO: no headset found, running in desktop mode")
 		return
 
 	print("Main|INFO: OpenXR initialised successfully")

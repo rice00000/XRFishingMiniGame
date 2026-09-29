@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SpawnPool" format=3]
+
+[ext_resource type="Script" path="res://river/scripts/spawn_pool.gd" id="0_pool"]
+[ext_resource type="Script" path="res://river/scripts/river_object_config.gd" id="1_cfg"]
+[ext_resource type="Resource" path="res://river/data/objects/orange_rock.tres" id="2_orange_rock"]
+[ext_resource type="Resource" path="res://river/data/objects/purple_buoy.tres" id="3_purple_buoy"]
+
+[resource]
+script = ExtResource("0_pool")
+id = &"still"
+objects = Array[ExtResource("1_cfg")]([ExtResource("2_orange_rock"), ExtResource("3_purple_buoy")])
+count = 1

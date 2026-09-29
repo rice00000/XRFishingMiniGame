@@ -1,0 +1,151 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://river/scripts/skin/scenery.gd" id="1_scenery"]
+[ext_resource type="Texture2D" path="res://river/art/sky/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_sky"]
+[ext_resource type="Shader" path="res://river/skins/lagoon/water.gdshader" id="3_water"]
+[ext_resource type="Shader" path="res://river/skins/lagoon/seabed.gdshader" id="4_seabed"]
+[ext_resource type="PackedScene" path="res://river/art/props/rock_large_1.glb" id="5_rl1"]
+[ext_resource type="PackedScene" path="res://river/art/props/rock_large_2.glb" id="6_rl2"]
+[ext_resource type="PackedScene" path="res://river/art/props/rock_large_3.glb" id="7_rl3"]
+[ext_resource type="PackedScene" path="res://river/art/props/rock_1.glb" id="8_r1"]
+[ext_resource type="PackedScene" path="res://river/art/props/rock_2.glb" id="9_r2"]
+[ext_resource type="PackedScene" path="res://river/art/props/palm_tree_1.glb" id="10_p1"]
+[ext_resource type="PackedScene" path="res://river/art/props/palm_tree_2.glb" id="11_p2"]
+
+[sub_resource type="PanoramaSkyMaterial" id="SkyMat"]
+panorama = ExtResource("2_sky")
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_energy = 1.1
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 0.95
+glow_enabled = true
+glow_intensity = 0.4
+glow_bloom = 0.05
+fog_enabled = true
+fog_light_color = Color(0.7, 0.82, 0.95, 1)
+fog_density = 0.004
+fog_sky_affect = 0.0
+adjustment_enabled = true
+adjustment_saturation = 1.15
+
+[sub_resource type="FastNoiseLite" id="NoiseA"]
+frequency = 0.02
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NormalA"]
+width = 512
+height = 512
+seamless = true
+as_normal_map = true
+bump_strength = 6.0
+noise = SubResource("NoiseA")
+
+[sub_resource type="FastNoiseLite" id="NoiseB"]
+seed = 7
+frequency = 0.035
+fractal_octaves = 2
+
+[sub_resource type="NoiseTexture2D" id="NormalB"]
+width = 512
+height = 512
+seamless = true
+as_normal_map = true
+bump_strength = 4.0
+noise = SubResource("NoiseB")
+
+[sub_resource type="ShaderMaterial" id="WaterMat"]
+render_priority = 0
+shader = ExtResource("3_water")
+shader_parameter/normal_a = SubResource("NormalA")
+shader_parameter/normal_b = SubResource("NormalB")
+
+[sub_resource type="PlaneMesh" id="WaterMesh"]
+material = SubResource("WaterMat")
+size = Vector2(600, 600)
+subdivide_width = 60
+subdivide_depth = 60
+
+[sub_resource type="ShaderMaterial" id="SeabedMat"]
+render_priority = 0
+shader = ExtResource("4_seabed")
+
+[sub_resource type="PlaneMesh" id="SeabedMesh"]
+material = SubResource("SeabedMat")
+size = Vector2(90, 90)
+subdivide_width = 180
+subdivide_depth = 180
+
+[node name="LagoonScenery" type="Node3D"]
+script = ExtResource("1_scenery")
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.383, 0.321, 0, 0.643, 0.766, -0.5, -0.663, 0.557, 0, 10, 0)
+light_color = Color(1, 0.96, 0.88, 1)
+light_energy = 1.3
+shadow_enabled = true
+directional_shadow_mode = 0
+directional_shadow_max_distance = 25.0
+
+[node name="Seabed" type="MeshInstance3D" parent="."]
+mesh = SubResource("SeabedMesh")
+cast_shadow = 0
+extra_cull_margin = 3.0
+
+[node name="Water" type="MeshInstance3D" parent="."]
+mesh = SubResource("WaterMesh")
+cast_shadow = 0
+
+[node name="Shore" type="Node3D" parent="."]
+
+[node name="RockLeft" parent="Shore" instance=ExtResource("5_rl1")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -3.3, -0.15, -0.8)
+
+[node name="RockRight" parent="Shore" instance=ExtResource("9_r2")]
+transform = Transform3D(0.2, 0, 0.2, 0, 0.3, 0, -0.2, 0, 0.2, 2.9, -0.15, -1.1)
+
+[node name="RockBehindLeft" parent="Shore" instance=ExtResource("8_r1")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -2.2, -0.1, 1.6)
+
+[node name="RockFarLeft" parent="Shore" instance=ExtResource("7_rl3")]
+transform = Transform3D(0.45, 0, 0, 0, 0.4, 0, 0, 0, 0.45, -7.5, -0.6, -3.8)
+
+[node name="RockFarRight" parent="Shore" instance=ExtResource("6_rl2")]
+transform = Transform3D(-0.45, 0, 0, 0, 0.45, 0, 0, 0, -0.45, 7.8, -0.6, -4.6)
+
+[node name="PalmLeft" parent="Shore" instance=ExtResource("10_p1")]
+transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, -5.2, 0, 1.2)
+
+[node name="PalmRight" parent="Shore" instance=ExtResource("11_p2")]
+transform = Transform3D(-1.5, 0, 0.6, 0, 1.6, 0, -0.6, 0, -1.5, 5.6, 0, 0.4)
+
+[node name="PalmBack" parent="Shore" instance=ExtResource("10_p1")]
+transform = Transform3D(0, 0, -1.9, 0, 1.9, 0, 1.9, 0, 0, 1.5, 0, 4.5)
+
+[node name="Islands" type="Node3D" parent="."]
+
+[node name="IslandLeft" parent="Islands" instance=ExtResource("7_rl3")]
+transform = Transform3D(3.5, 0, 0, 0, 1.6, 0, 0, 0, 3.5, -32, -2.5, -60)
+
+[node name="IslandLeftPalm" parent="Islands" instance=ExtResource("10_p1")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -30, 6.5, -60)
+
+[node name="IslandRight" parent="Islands" instance=ExtResource("5_rl1")]
+transform = Transform3D(4, 0, 0, 0, 1.5, 0, 0, 0, 4, 36, -1.5, -75)
+
+[node name="IslandRightPalm" parent="Islands" instance=ExtResource("11_p2")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 34, 2.8, -74)
+
+[node name="IslandRightPalm2" parent="Islands" instance=ExtResource("10_p1")]
+transform = Transform3D(-2, 0, 0, 0, 2, 0, 0, 0, -2, 39, 2.5, -77)
+
+[node name="IslandCenter" parent="Islands" instance=ExtResource("6_rl2")]
+transform = Transform3D(2.5, 0, 0, 0, 0.9, 0, 0, 0, 2.5, 6, -2.5, -110)

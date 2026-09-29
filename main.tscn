@@ -14,6 +14,8 @@
 [ext_resource type="Shader" uid="uid://b3b2pbfumuxm4" path="res://assets/shaders/left_eye.gdshader" id="13_vivmo"]
 [ext_resource type="Shader" uid="uid://blrqyx0st2vu6" path="res://assets/shaders/right_eye.gdshader" id="14_2cqfq"]
 [ext_resource type="Script" uid="uid://bt5krry1meoum" path="res://scripts/xr_grab_hands.gd" id="15_hgrab"]
+[ext_resource type="PackedScene" path="res://river/river_game.tscn" id="20_river"]
+[ext_resource type="Resource" path="res://river/skins/lagoon/lagoon_skin.tres" id="21_skin"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_grab"]
 radius = 0.08
@@ -746,3 +748,13 @@ transform = Transform3D(0.96385396, 0, -0.26643118, 0, 1, 0, 0.26643118, 0, 0.96
 text = "Press 'B' on your
 right controller
 to toggle passthrough!"
+
+[node name="XRAimRight" type="XRController3D" parent="XROrigin3D" unique_id=1740212233]
+tracker = &"right_hand"
+pose = &"aim"
+
+[node name="RiverGame" parent="." unique_id=1740212234 node_paths=PackedStringArray("aim_controller", "camera") instance=ExtResource("20_river")]
+aim_controller = NodePath("../XROrigin3D/XRAimRight")
+camera = NodePath("../XROrigin3D/XRCamera3D")
+skin = ExtResource("21_skin")
+hide_with_scenery = Array[NodePath]([NodePath("../Floor"), NodePath("../Table"), NodePath("../Props"), NodePath("../PassthroughTutorialText"), NodePath("../SunLight")])

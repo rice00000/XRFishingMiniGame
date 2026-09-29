@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://river/art/props/trident.glb" id="1_art"]
+
+[node name="Trident" type="Node3D"]
+
+[node name="Model" parent="." instance=ExtResource("1_art")]
+transform = Transform3D(0.2, 0, 0, 0, 0, 0.2, 0, -0.2, 0, 0, 0, 1.3)

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="RiverTask" format=3]
+
+[ext_resource type="Script" path="res://river/scripts/river_task.gd" id="1_task"]
+[ext_resource type="Script" path="res://river/scripts/tag_rule.gd" id="2_rule"]
+[ext_resource type="Script" path="res://river/scripts/spawn_pool.gd" id="3_pool"]
+[ext_resource type="Resource" path="res://river/data/pools/floaters_all.tres" id="4_floaters_all"]
+
+[sub_resource type="Resource" id="Resource_rule"]
+script = ExtResource("2_rule")
+tag = "red"
+
+[resource]
+script = ExtResource("1_task")
+id = &"red_one"
+text = "Catch the RED one!"
+rule = SubResource("Resource_rule")
+pools = Array[ExtResource("3_pool")]([ExtResource("4_floaters_all")])
+time_limit = 20.0

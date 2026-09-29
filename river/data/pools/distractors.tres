@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SpawnPool" format=3]
+
+[ext_resource type="Script" path="res://river/scripts/spawn_pool.gd" id="0_pool"]
+[ext_resource type="Script" path="res://river/scripts/river_object_config.gd" id="1_cfg"]
+[ext_resource type="Resource" path="res://river/data/objects/red_ball.tres" id="2_red_ball"]
+[ext_resource type="Resource" path="res://river/data/objects/blue_cone.tres" id="3_blue_cone"]
+[ext_resource type="Resource" path="res://river/data/objects/green_cylinder.tres" id="4_green_cylinder"]
+[ext_resource type="Resource" path="res://river/data/objects/white_ring.tres" id="5_white_ring"]
+
+[resource]
+script = ExtResource("0_pool")
+id = &"distractors"
+objects = Array[ExtResource("1_cfg")]([ExtResource("2_red_ball"), ExtResource("3_blue_cone"), ExtResource("4_green_cylinder"), ExtResource("5_white_ring")])
+count = 3

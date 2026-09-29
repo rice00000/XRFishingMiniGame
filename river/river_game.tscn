@@ -1,0 +1,93 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://river/scripts/river_game.gd" id="1_game"]
+[ext_resource type="Resource" path="res://river/data/demo_session.tres" id="2_session"]
+[ext_resource type="Script" path="res://river/scripts/river_spawner.gd" id="3_spawner"]
+[ext_resource type="Script" path="res://river/scripts/harpoon.gd" id="4_harpoon"]
+[ext_resource type="Script" path="res://river/scripts/task_ui.gd" id="5_ui"]
+[ext_resource type="Script" path="res://river/scripts/inventory.gd" id="6_inventory"]
+[ext_resource type="Script" path="res://river/scripts/trial_logger.gd" id="7_logger"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_panel"]
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="Quad_panel"]
+material = SubResource("Mat_panel")
+size = Vector2(3.2, 1.1)
+
+[node name="RiverGame" type="Node3D" node_paths=PackedStringArray("spawner", "harpoon", "task_ui", "inventory", "logger")]
+script = ExtResource("1_game")
+session = ExtResource("2_session")
+spawner = NodePath("RiverSpawner")
+harpoon = NodePath("Harpoon")
+task_ui = NodePath("TaskUI")
+inventory = NodePath("Inventory")
+logger = NodePath("TrialLogger")
+
+[node name="RiverSpawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -4.2)
+script = ExtResource("3_spawner")
+
+[node name="Harpoon" type="Node3D" parent="."]
+script = ExtResource("4_harpoon")
+
+[node name="TaskUI" type="Node3D" parent="." node_paths=PackedStringArray("panel", "task_label", "reference_image", "reference_model", "feedback_label", "inventory_label")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, -3.2)
+script = ExtResource("5_ui")
+panel = NodePath("Panel")
+task_label = NodePath("TaskLabel")
+reference_image = NodePath("ReferenceImage")
+reference_model = NodePath("ReferenceModel")
+feedback_label = NodePath("FeedbackLabel")
+inventory_label = NodePath("InventoryLabel")
+
+[node name="Panel" type="MeshInstance3D" parent="TaskUI"]
+cast_shadow = 0
+mesh = SubResource("Quad_panel")
+
+[node name="TaskLabel" type="Label3D" parent="TaskUI"]
+render_priority = 10
+outline_render_priority = 9
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.02)
+pixel_size = 0.004
+text = "Task text"
+font_size = 72
+outline_size = 18
+outline_modulate = Color(0, 0, 0, 1)
+autowrap_mode = 3
+width = 725.0
+
+[node name="ReferenceImage" type="Sprite3D" parent="TaskUI"]
+render_priority = 10
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0, 0.02)
+
+[node name="ReferenceModel" type="Node3D" parent="TaskUI"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0, 0.4)
+
+[node name="FeedbackLabel" type="Label3D" parent="TaskUI"]
+render_priority = 10
+outline_render_priority = 9
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95, 0.05)
+pixel_size = 0.004
+text = "Great catch!"
+font_size = 110
+outline_size = 26
+outline_modulate = Color(0, 0, 0, 1)
+
+[node name="InventoryLabel" type="Label3D" parent="TaskUI"]
+render_priority = 10
+outline_render_priority = 9
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, -0.6, 0.8)
+billboard = 1
+pixel_size = 0.004
+font_size = 56
+outline_size = 14
+outline_modulate = Color(0, 0, 0, 1)
+horizontal_alignment = 0
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("6_inventory")
+
+[node name="TrialLogger" type="Node" parent="."]
+script = ExtResource("7_logger")

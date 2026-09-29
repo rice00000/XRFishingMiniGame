@@ -1,0 +1,220 @@
+1
+00:00:08,300 --> 00:00:12,950
+This is River Harpoon: a simple spear-fishing game for low-vision research, running here on a PC.
+
+2
+00:00:13,000 --> 00:00:17,450
+Aim with the mouse, the arrow keys or a gamepad. In VR you aim with the controller.
+
+3
+00:00:17,500 --> 00:00:21,950
+The big yellow ring snaps around the object you would hit. One button fires.
+
+4
+00:00:22,000 --> 00:00:26,950
+The answer is decided the instant you press. The spear flight is only an animation.
+
+5
+00:00:27,000 --> 00:00:31,950
+Each task has a rule: fastest spinner, slowest spinner, fastest swimmer, same as a picture, ...
+
+6
+00:00:32,000 --> 00:00:36,450
+Correct catches earn items from the reward table; the inventory is shown on the left.
+
+7
+00:00:36,500 --> 00:00:40,950
+All the art (sky, water, fish, rocks, trident) is a swappable 'skin' - more on that soon.
+
+8
+00:00:44,000 --> 00:00:47,950
+Everything is set up on one node: RiverGame, inside main.tscn.
+
+9
+00:00:49,200 --> 00:00:53,150
+Session: which experiment runs. It is a list of tasks (trials).
+
+10
+00:00:54,400 --> 00:00:59,350
+Skin: the visual look (scenery, models, spear). Clear it to get the plain version back.
+
+11
+00:01:00,600 --> 00:01:05,050
+Hide With Scenery: template nodes (floor, table) hidden while the skin's scenery is shown.
+
+12
+00:01:06,300 --> 00:01:11,250
+Input is picked automatically: VR controller with a headset, otherwise mouse, keyboard or gamepad.
+
+13
+00:01:11,300 --> 00:01:15,750
+To use another device, write a small AimInput script and drop it into Input Override.
+
+14
+00:01:16,100 --> 00:01:22,250
+The same session with the skin cleared: plain, high-contrast placeholder shapes.
+
+15
+00:01:22,300 --> 00:01:28,750
+Rules, timing and logs stay identical - the look never changes the experiment.
+
+16
+00:01:33,000 --> 00:01:37,450
+Each floating object is a RiverObjectConfig resource (a .tres file in river/data/objects).
+
+17
+00:01:37,500 --> 00:01:40,950
+Id: the name rules, rewards and logs use.
+
+18
+00:01:42,200 --> 00:01:46,150
+Movement Speed: metres per second along the river. 0 = stationary.
+
+19
+00:01:47,400 --> 00:01:50,850
+Rotation Speed: degrees per second around Rotation Axis.
+
+20
+00:01:52,100 --> 00:01:56,550
+Change a value in the Inspector, press Ctrl+S, and the next run uses it.
+
+21
+00:01:57,800 --> 00:02:02,750
+Scene: drag any .glb / .gltf / .tscn model here to replace the placeholder shape.
+
+22
+00:02:04,000 --> 00:02:08,950
+Models are scaled to Size (metres) and centred automatically, whatever their original scale.
+
+23
+00:02:13,200 --> 00:02:18,150
+Decoration lives in a RiverSkin: object id -> model, plus the scenery and the spear.
+
+24
+00:02:18,200 --> 00:02:23,150
+The game logic never reads the skin, so looks can be swapped without touching the experiment.
+
+25
+00:02:24,300 --> 00:02:29,250
+Wrap an imported model in a small scene with SkinModel: turn it to face downstream (+X) ...
+
+26
+00:02:29,300 --> 00:02:32,250
+... and it loops the model's swim animation.
+
+27
+00:02:34,500 --> 00:02:39,950
+The scenery scene holds water, sand, rocks, palms and the sky. Edit, replace or delete it freely.
+
+28
+00:02:44,000 --> 00:02:48,950
+Example experiment: find the character shown in a 2D picture among fast-spinning characters.
+
+29
+00:02:49,000 --> 00:02:52,450
+It lives in one folder: river/data/experiments/character_match.
+
+30
+00:02:53,700 --> 00:02:58,650
+One config per character. Here the model is the stimulus, so it goes in the config's Scene.
+
+31
+00:02:59,900 --> 00:03:02,850
+All five spin at 400 degrees per second ...
+
+32
+00:03:04,100 --> 00:03:07,550
+... and do not move, so rotation is the only thing that varies.
+
+33
+00:03:07,600 --> 00:03:11,550
+Tip: select several .tres files in the FileSystem dock to edit them all at once.
+
+34
+00:03:12,800 --> 00:03:17,250
+A SpawnPool lists the objects and how many to spawn per trial: here all 5.
+
+35
+00:03:18,500 --> 00:03:21,950
+A task is one trial. Text: the instruction on the panel.
+
+36
+00:03:23,200 --> 00:03:26,150
+Reference Image: the 2D picture to match.
+
+37
+00:03:27,400 --> 00:03:30,850
+Reference Object: which config is the correct answer.
+
+38
+00:03:32,100 --> 00:03:38,050
+Rule: StandardRule set to SAME_AS_REFERENCE. Other kinds: FASTEST/SLOWEST ROTATION or MOVEMENT, FROM_POOL.
+
+39
+00:03:39,300 --> 00:03:43,250
+Optional per trial: a fixed seed, retry until correct, and a time limit.
+
+40
+00:03:44,500 --> 00:03:48,450
+The session lists each of the 5 tasks twice: 10 trials.
+
+41
+00:03:49,700 --> 00:03:54,650
+Shuffle Tasks randomises the order. The seed is logged, so any run can be replayed exactly.
+
+42
+00:03:56,900 --> 00:04:01,350
+Make the 2D pictures with tools/reference_image_maker.tscn: set the folders ...
+
+43
+00:04:01,400 --> 00:04:05,350
+... and press F6. It renders a transparent PNG of every object config.
+
+44
+00:04:07,600 --> 00:04:12,050
+Finally, drag the session into RiverGame > Session and press F5.
+
+45
+00:04:12,400 --> 00:04:18,050
+Here it runs: the panel shows a 2D picture of one character.
+
+46
+00:04:18,100 --> 00:04:24,050
+Five characters spin at 400 degrees per second. The player spears the one in the picture.
+
+47
+00:04:24,100 --> 00:04:30,050
+Short feedback after each catch, then the next trial with a new random layout.
+
+48
+00:04:30,100 --> 00:04:36,050
+A wrong pick is logged too: which object, how long it took, and that it was wrong.
+
+49
+00:04:36,100 --> 00:04:42,050
+10 trials in shuffled order. The seed is saved, so the exact run can be replayed.
+
+50
+00:04:42,100 --> 00:04:48,050
+Change a speed, a picture or the number of trials in the .tres files - no code needed.
+
+51
+00:04:51,100 --> 00:04:56,050
+Need a new kind of question? Write a rule: extend TaskRule and override find_targets().
+
+52
+00:04:56,100 --> 00:05:00,550
+This TagRule marks every object with a given tag as correct. It is about 15 lines.
+
+53
+00:05:00,600 --> 00:05:04,550
+New rules show up in the task's Rule menu, next to StandardRule.
+
+54
+00:05:07,900 --> 00:05:12,550
+Each session writes a CSV with one row per trial: target, selection, response time, correctness, misses.
+
+55
+00:05:12,600 --> 00:05:17,550
+Logs are in the user data folder; the exact path is printed when the game starts.
+

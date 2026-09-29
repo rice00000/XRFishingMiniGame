@@ -8,9 +8,18 @@
 export_credentials.cfg
 
 # build
+/build/
 *.apk
+*.aab
+*.idsig
 
 *.tmp
+
+# Videos (Godot can't play mp4/mov; keep large recordings out of git)
+*.mp4
+*.mov
+*.mkv
+*.avi
 
 # OS
 .DS_Store
