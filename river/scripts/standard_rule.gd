@@ -13,9 +13,9 @@ enum Kind {
 }
 
 @export var kind := Kind.FASTEST_ROTATION
-## SAME_AS_REFERENCE: the config to match (by id). Empty = the task's reference_object.
+## SAME_AS_REFERENCE: the config to match (by name). Empty = the task's reference_object.
 @export var reference_object: RiverObjectConfig
-## FROM_POOL: id of the pool whose objects are correct.
+## FROM_POOL: name of the pool whose objects are correct.
 @export var pool_id: StringName
 @export var tie_tolerance := 0.001
 
@@ -23,13 +23,13 @@ enum Kind {
 func find_targets(objects: Array[RiverObject], task: RiverTask) -> Array[RiverObject]:
 	match kind:
 		Kind.FASTEST_ROTATION:
-			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.rotation_speed), true)
+			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.spin_speed_deg_per_s), true)
 		Kind.SLOWEST_ROTATION:
-			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.rotation_speed), false)
+			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.spin_speed_deg_per_s), false)
 		Kind.FASTEST_MOVEMENT:
-			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.movement_speed), true)
+			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.swim_speed_m_per_s), true)
 		Kind.SLOWEST_MOVEMENT:
-			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.movement_speed), false)
+			return _extreme(objects, func(o: RiverObject) -> float: return absf(o.config.swim_speed_m_per_s), false)
 		Kind.SAME_AS_REFERENCE:
 			var ref := _reference(task)
 			if ref == null:

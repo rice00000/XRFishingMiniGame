@@ -1,39 +1,50 @@
 class_name SpawnPool
 extends Resource
-## A bag of object configs and how many to spawn from it per trial.
+## A group of objects and how many of them to spawn per trial. A task's own
+## `objects` form one pool; add more in the task's "Advanced > extra_pools" to mix
+## groups, e.g. one fixed target plus 3 random distractors.
 
-## Used by FROM_POOL rules, rewards and logs. Empty = the resource file name.
-@export var id: StringName
+## Used by rewards and logs. Empty = the resource file name.
+@export var name: StringName
 @export var objects: Array[RiverObjectConfig] = []
-@export_range(0, 50) var count := 1
-## Pick each config at most once (count is capped at objects.size()).
-## Off = pick with replacement, so duplicates are possible.
+## How many to spawn per trial. 0 = all of them.
+@export_range(0, 50) var count := 0
+## Pick each object at most once. Off = duplicates are possible.
 @export var unique := true
+
+var _expanded: Array[RiverObjectConfig] = []
 
 
 func get_id() -> StringName:
-	if id != &"":
-		return id
+	if name != &"":
+		return name
 	return StringName(resource_path.get_file().get_basename())
+
+
+## Every object this pool can spawn, with `variable` applied.
+func get_objects() -> Array[RiverObjectConfig]:
+	if _expanded.is_empty():
+		for cfg in objects:
+			if cfg:
+				_expanded.append_array(cfg.expand())
+	return _expanded
 
 
 func pick(rng: RandomNumberGenerator) -> Array[RiverObjectConfig]:
 	var result: Array[RiverObjectConfig] = []
-	var valid: Array[RiverObjectConfig] = []
-	for cfg in objects:
-		if cfg != null:
-			valid.append(cfg)
+	var valid := get_objects().duplicate()
 	if valid.is_empty():
 		return result
+	var wanted := count if count > 0 else valid.size()
 
 	if unique:
-		if count > valid.size():
-			push_warning("SpawnPool|WARN: '%s' wants %d unique objects but has %d" % [get_id(), count, valid.size()])
+		if wanted > valid.size():
+			push_warning("SpawnPool|WARN: '%s' wants %d unique objects but has %d" % [get_id(), wanted, valid.size()])
 		shuffle(valid, rng)
-		for i in mini(count, valid.size()):
+		for i in mini(wanted, valid.size()):
 			result.append(valid[i])
 	else:
-		for i in count:
+		for i in wanted:
 			result.append(valid[rng.randi_range(0, valid.size() - 1)])
 	return result
 

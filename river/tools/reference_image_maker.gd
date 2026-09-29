@@ -1,21 +1,25 @@
 extends Node
-## Renders a PNG of every RiverObjectConfig (.tres) in `configs_folder` into
-## `output_folder`, named after the config id. Use the PNGs as a task's
-## reference_image. Open reference_image_maker.tscn, set the folders in the
-## Inspector, and press F6 (Run Current Scene). The window closes when done.
+## Renders a PNG of every object in `experiment` into `output_folder`, named after
+## the object id. Set the PNGs as the objects' `picture` (or a task's reference_image).
+## Open reference_image_maker.tscn, pick the experiment in the Inspector, and press
+## F6 (Run Current Scene). The window closes when done.
 
-@export_dir var configs_folder := "res://river/data/experiments/character_match/objects"
-@export_dir var output_folder := "res://river/data/experiments/character_match/images"
+@export var experiment: Experiment
+@export_dir var output_folder := "res://river/art/characters/pictures"
 @export var image_size := 512
 ## Transparent by default, so the image sits cleanly on the task panel.
 @export var background := Color(0, 0, 0, 0)
 ## Camera tilt; slightly from above reads well for characters and fish.
 @export var camera_pitch_degrees := -8.0
-## Optional: render with a skin's model instead of the config's own visual.
-@export var skin: RiverSkin
+## Render with the experiment skin's models instead of the objects' own visuals.
+@export var use_experiment_skin := false
 
 
 func _ready() -> void:
+	if experiment == null:
+		push_error("ReferenceImageMaker|ERROR: pick an experiment in the Inspector")
+		get_tree().quit()
+		return
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(image_size, image_size)
 	viewport.own_world_3d = true
@@ -42,14 +46,15 @@ func _ready() -> void:
 
 	DirAccess.make_dir_recursive_absolute(output_folder)
 	var count := 0
-	for file in DirAccess.get_files_at(configs_folder):
-		if not (file.ends_with(".tres") or file.ends_with(".tres.remap")):
-			continue
-		var cfg := load(configs_folder.path_join(file.trim_suffix(".remap"))) as RiverObjectConfig
-		if cfg == null:
-			continue
+	var configs := {}
+	for task in experiment.tasks:
+		for pool in task.get_pools():
+			for cfg in pool.get_objects():
+				configs[cfg.get_id()] = cfg
+	var skin: RiverSkin = experiment.look if use_experiment_skin else null
+	for cfg: RiverObjectConfig in configs.values():
 		var visual := RiverObject.build_visual(cfg, skin.scene_for(cfg) if skin else null)
-		visual.basis = Basis.from_euler(cfg.initial_rotation_degrees * (PI / 180.0))
+		visual.basis = Basis.from_euler(cfg.start_tilt_degrees * (PI / 180.0))
 		viewport.add_child(visual)
 
 		# Frame the object: its size fills ~85% of the image height.

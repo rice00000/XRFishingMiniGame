@@ -41,7 +41,7 @@ func show_task(text: String, image: Texture2D = null, model: RiverObjectConfig =
 	if model:
 		# Shown still (no spin or drift) so the preview doesn't hint at motion rules.
 		var preview := RiverObject.build_visual(model, skin.scene_for(model) if skin else null)
-		preview.basis = Basis.from_euler(model.initial_rotation_degrees * (PI / 180.0)) * (reference_height / maxf(model.size, 0.01) * 0.8)
+		preview.basis = Basis.from_euler(model.start_tilt_degrees * (PI / 180.0)) * (reference_height / maxf(model.size, 0.01) * 0.8)
 		reference_model.add_child(preview)
 
 	# Text uses the whole panel unless a reference sits on its right.

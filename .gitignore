@@ -29,3 +29,9 @@ desktop.ini
 # OpenXR Vendors plugin
 /addons/godotopenxrvendors/
 /asset/
+
+# Trial logs pulled from the headset (tools/pull_logs.py)
+/logs/
+
+# Python
+__pycache__/

@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="Experiment" format=3]
+
+[ext_resource type="Script" path="res://river/scripts/experiment.gd" id="experiment"]
+[ext_resource type="Script" path="res://river/scripts/river_task.gd" id="task"]
+[ext_resource type="Script" path="res://river/scripts/river_object_config.gd" id="object"]
+[ext_resource type="Script" path="res://river/scripts/reward_table.gd" id="reward_table"]
+[ext_resource type="Script" path="res://river/scripts/reward_entry.gd" id="reward_entry"]
+[ext_resource type="Resource" path="res://river/skins/lagoon/lagoon_skin.tres" id="lagoon"]
+
+[sub_resource type="Resource" id="fish"]
+script = ExtResource("object")
+name = &"fish"
+shape = "capsule"
+color = Color(1, 0.45, 0.1, 1)
+size = 0.6
+float_height = 0.08
+variable = "swim_speed_m_per_s"
+variable_values = PackedFloat64Array(0.15, 0.3, 0.45, 0.6, 0.75)
+
+[sub_resource type="Resource" id="catch_fastest"]
+script = ExtResource("task")
+question_text = "Catch the fish that swims the FASTEST!"
+correct_answer_rule = "fastest moving"
+objects_in_trial = Array[ExtResource("object")]([SubResource("fish")])
+repeat_times = 3
+
+[sub_resource type="Resource" id="shell_per_catch"]
+script = ExtResource("reward_entry")
+
+[sub_resource type="Resource" id="rewards"]
+script = ExtResource("reward_table")
+entries = Array[ExtResource("reward_entry")]([SubResource("shell_per_catch")])
+
+[resource]
+script = ExtResource("experiment")
+description = "Five identical fish swim at 0.15 to 0.75 m/s. Can the player find the fastest one?"
+tasks = Array[ExtResource("task")]([SubResource("catch_fastest")])
+look = ExtResource("lagoon")
+show_time_on_correct = true
+reward_table = SubResource("rewards")

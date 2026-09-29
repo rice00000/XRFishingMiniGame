@@ -4,12 +4,14 @@ extends AimInput
 ## arrow keys / WASD / a gamepad stick move it too, so the game also works without
 ## a mouse. Fire = left click, Space, Enter or gamepad A (all remappable in
 ## Project Settings > Input Map; defaults are added only if the actions are missing).
+## Esc or gamepad Start opens the experiment menu.
 
 const FIRE := &"harpoon_fire"
 const LEFT := &"harpoon_aim_left"
 const RIGHT := &"harpoon_aim_right"
 const UP := &"harpoon_aim_up"
 const DOWN := &"harpoon_aim_down"
+const MENU := &"harpoon_menu"
 
 @export var camera: Camera3D
 ## Cursor speed for keys / sticks, in screen heights per second.
@@ -40,6 +42,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		cursor = get_viewport().get_mouse_position()
 	elif event.is_action_pressed(FIRE):
 		confirm_pressed.emit()
+	elif event.is_action_pressed(MENU):
+		back_pressed.emit()
 
 
 func _process(delta: float) -> void:
@@ -74,6 +78,7 @@ static func add_default_actions() -> void:
 	_ensure(RIGHT, [_key(KEY_RIGHT), _key(KEY_D), _axis(JOY_AXIS_LEFT_X, 1.0)])
 	_ensure(UP, [_key(KEY_UP), _key(KEY_W), _axis(JOY_AXIS_LEFT_Y, -1.0)])
 	_ensure(DOWN, [_key(KEY_DOWN), _key(KEY_S), _axis(JOY_AXIS_LEFT_Y, 1.0)])
+	_ensure(MENU, [_key(KEY_ESCAPE), _pad(JOY_BUTTON_START)])
 
 
 static func _ensure(action: StringName, events: Array) -> void:

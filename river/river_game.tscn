@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://7gclgs58faik"]
 
 [ext_resource type="Script" uid="uid://bf1m8oj4k3ili" path="res://river/scripts/river_game.gd" id="1_game"]
-[ext_resource type="Resource" uid="uid://b08wutoru4ykw" path="res://river/data/experiments/motion/fish_speed_session.tres" id="2_qqx5y"]
 [ext_resource type="Script" uid="uid://dqgbrk3sqs5do" path="res://river/scripts/river_spawner.gd" id="3_spawner"]
 [ext_resource type="Script" uid="uid://dw4tttjjtlnin" path="res://river/scripts/harpoon.gd" id="4_harpoon"]
 [ext_resource type="Script" uid="uid://c1cbx2783rlmu" path="res://river/scripts/task_ui.gd" id="5_ui"]
 [ext_resource type="Script" uid="uid://4ecnrun4jg56" path="res://river/scripts/inventory.gd" id="6_inventory"]
 [ext_resource type="Script" uid="uid://l5m7k68vkthh" path="res://river/scripts/trial_logger.gd" id="7_logger"]
+[ext_resource type="Script" uid="uid://cwhn58fv2xnt3" path="res://river/scripts/experiment_menu.gd" id="8_menu"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_panel"]
 shading_mode = 0
@@ -16,14 +16,14 @@ albedo_color = Color(0, 0, 0, 1)
 material = SubResource("Mat_panel")
 size = Vector2(3.2, 1.1)
 
-[node name="RiverGame" type="Node3D" unique_id=1404424620 node_paths=PackedStringArray("spawner", "harpoon", "task_ui", "inventory", "logger")]
+[node name="RiverGame" type="Node3D" unique_id=1404424620 node_paths=PackedStringArray("spawner", "harpoon", "task_ui", "inventory", "logger", "menu")]
 script = ExtResource("1_game")
-session = ExtResource("2_qqx5y")
 spawner = NodePath("RiverSpawner")
 harpoon = NodePath("Harpoon")
 task_ui = NodePath("TaskUI")
 inventory = NodePath("Inventory")
 logger = NodePath("TrialLogger")
+menu = NodePath("ExperimentMenu")
 
 [node name="RiverSpawner" type="Node3D" parent="." unique_id=1376337033]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -4.2)
@@ -88,3 +88,7 @@ script = ExtResource("6_inventory")
 
 [node name="TrialLogger" type="Node" parent="." unique_id=1135273979]
 script = ExtResource("7_logger")
+
+[node name="ExperimentMenu" type="Node3D" parent="." unique_id=594532338]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -3.9)
+script = ExtResource("8_menu")

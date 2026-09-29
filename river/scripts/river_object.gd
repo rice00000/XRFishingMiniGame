@@ -29,12 +29,12 @@ func setup(p_config: RiverObjectConfig, p_pool_id: StringName, p_index: int, wra
 
 	_visual = build_visual(config, skin_scene)
 	var scene := skin_scene if skin_scene else config.scene
-	visual_source = scene.resource_path if scene else "placeholder:%s" % RiverObjectConfig.Shape.keys()[config.placeholder_shape]
+	visual_source = scene.resource_path if scene else "placeholder:%s" % config.shape
 	add_child(_visual)
-	_base_basis = Basis.from_euler(config.initial_rotation_degrees * (PI / 180.0))
+	_base_basis = Basis.from_euler(config.start_tilt_degrees * (PI / 180.0))
 	_visual.basis = _base_basis
-	if config.rotation_axis.length_squared() > 0.0:
-		_spin_axis = config.rotation_axis.normalized()
+	if config.spin_axis.length_squared() > 0.0:
+		_spin_axis = config.spin_axis.normalized()
 
 
 func get_pick_radius() -> float:
@@ -45,16 +45,16 @@ func _process(delta: float) -> void:
 	if caught:
 		return
 
-	if config.movement_speed != 0.0:
-		position.x += config.movement_speed * delta
+	if config.swim_speed_m_per_s != 0.0:
+		position.x += config.swim_speed_m_per_s * delta
 		# Leave one end of the river, come back in at the other.
 		if position.x > _wrap_half_length:
 			position.x -= 2.0 * _wrap_half_length
 		elif position.x < -_wrap_half_length:
 			position.x += 2.0 * _wrap_half_length
 
-	if config.rotation_speed != 0.0 and _spin_axis != Vector3.ZERO:
-		_angle = fmod(_angle + deg_to_rad(config.rotation_speed) * delta, TAU)
+	if config.spin_speed_deg_per_s != 0.0 and _spin_axis != Vector3.ZERO:
+		_angle = fmod(_angle + deg_to_rad(config.spin_speed_deg_per_s) * delta, TAU)
 		_visual.basis = Basis(_spin_axis, _angle) * _base_basis
 
 
@@ -63,15 +63,15 @@ func to_log_dict() -> Dictionary:
 		"index": index,
 		"id": String(config.get_id()),
 		"pool": String(pool_id),
-		"display_name": config.display_name,
 		"config": config.resource_path,
+		"variant_of": String(config.variant_of),
 		"visual": visual_source,
 		"tags": Array(config.tags),
 		"size": config.size,
-		"movement_speed": config.movement_speed,
-		"rotation_speed": config.rotation_speed,
-		"rotation_axis": vec_to_array(config.rotation_axis),
-		"initial_rotation_degrees": vec_to_array(config.initial_rotation_degrees),
+		"swim_speed_m_per_s": config.swim_speed_m_per_s,
+		"spin_speed_deg_per_s": config.spin_speed_deg_per_s,
+		"spin_axis": vec_to_array(config.spin_axis),
+		"start_tilt_degrees": vec_to_array(config.start_tilt_degrees),
 		"start_position": vec_to_array(start_position),
 	}
 
@@ -99,45 +99,45 @@ static func build_visual(cfg: RiverObjectConfig, skin_scene: PackedScene = null)
 
 	# A skin scene carries its own orientation, so the config's model fixes don't apply.
 	var own_model := scene != null and skin_scene == null
-	var rot := Basis.from_euler(cfg.model_rotation_degrees * (PI / 180.0)) if own_model else Basis.IDENTITY
+	var rot := Basis.from_euler(cfg.model_orientation_fix_degrees * (PI / 180.0)) if own_model else Basis.IDENTITY
 	var scale_factor := 1.0
 	var center := Vector3.ZERO
-	if scene and (cfg.fit_model_to_size or skin_scene):
+	if scene and (cfg.scale_model_to_size or skin_scene):
 		var bounds := _visual_bounds(body, Transform3D.IDENTITY)
 		if bounds.get_longest_axis_size() > 0.0:
 			scale_factor = cfg.size / bounds.get_longest_axis_size()
 			center = bounds.get_center()
 	body.basis = rot * scale_factor
-	body.position = (cfg.model_offset if own_model else Vector3.ZERO) - body.basis * center
+	body.position = (cfg.model_offset_fix_m if own_model else Vector3.ZERO) - body.basis * center
 	return root
 
 
 static func _make_placeholder(cfg: RiverObjectConfig) -> Node3D:
 	var s := cfg.size
 	var mesh: PrimitiveMesh
-	match cfg.placeholder_shape:
-		RiverObjectConfig.Shape.BOX:
+	match cfg.shape:
+		"box":
 			var box := BoxMesh.new()
 			box.size = Vector3(s, s * 0.6, s * 0.6)
 			mesh = box
-		RiverObjectConfig.Shape.CYLINDER:
+		"cylinder":
 			var cylinder := CylinderMesh.new()
 			cylinder.top_radius = s * 0.3
 			cylinder.bottom_radius = s * 0.3
 			cylinder.height = s
 			mesh = cylinder
-		RiverObjectConfig.Shape.CAPSULE:
+		"capsule":
 			var capsule := CapsuleMesh.new()
 			capsule.radius = s * 0.25
 			capsule.height = s
 			mesh = capsule
-		RiverObjectConfig.Shape.CONE:
+		"cone":
 			var cone := CylinderMesh.new()
 			cone.top_radius = 0.0
 			cone.bottom_radius = s * 0.45
 			cone.height = s
 			mesh = cone
-		RiverObjectConfig.Shape.TORUS:
+		"torus":
 			var torus := TorusMesh.new()
 			torus.inner_radius = s * 0.28
 			torus.outer_radius = s * 0.5
@@ -147,15 +147,15 @@ static func _make_placeholder(cfg: RiverObjectConfig) -> Node3D:
 			sphere.radius = s * 0.5
 			sphere.height = s
 			mesh = sphere
-	mesh.material = _bright_material(cfg.placeholder_color)
+	mesh.material = _bright_material(cfg.color)
 
 	var shape := MeshInstance3D.new()
 	shape.mesh = mesh
 
-	if cfg.placeholder_marker:
+	if cfg.show_spin_marker:
 		var marker_mesh := BoxMesh.new()
 		marker_mesh.size = Vector3.ONE * s * 0.28
-		var contrast := Color.BLACK if cfg.placeholder_color.get_luminance() > 0.5 else Color.WHITE
+		var contrast := Color.BLACK if cfg.color.get_luminance() > 0.5 else Color.WHITE
 		marker_mesh.material = _bright_material(contrast)
 		var marker := MeshInstance3D.new()
 		marker.mesh = marker_mesh

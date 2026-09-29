@@ -1,0 +1,177 @@
+[gd_resource type="Resource" script_class="Experiment" format=3]
+
+[ext_resource type="Script" path="res://river/scripts/experiment.gd" id="experiment"]
+[ext_resource type="Script" path="res://river/scripts/river_task.gd" id="task"]
+[ext_resource type="Script" path="res://river/scripts/river_object_config.gd" id="object"]
+[ext_resource type="Script" path="res://river/scripts/spawn_pool.gd" id="pool"]
+[ext_resource type="Script" path="res://river/scripts/reward_table.gd" id="reward_table"]
+[ext_resource type="Script" path="res://river/scripts/reward_entry.gd" id="reward_entry"]
+[ext_resource type="Resource" path="res://river/skins/lagoon/lagoon_skin.tres" id="lagoon"]
+
+[sub_resource type="Resource" id="red_ball"]
+script = ExtResource("object")
+name = &"red_ball"
+tags = PackedStringArray("red")
+shape = "sphere"
+color = Color(1, 0.12, 0.1, 1)
+size = 0.6
+swim_speed_m_per_s = 0.3
+spin_speed_deg_per_s = 60.0
+float_height = 0.08
+
+[sub_resource type="Resource" id="yellow_box"]
+script = ExtResource("object")
+name = &"yellow_box"
+tags = PackedStringArray("yellow")
+shape = "box"
+color = Color(1, 0.85, 0, 1)
+size = 0.6
+swim_speed_m_per_s = 0.2
+spin_speed_deg_per_s = 150.0
+float_height = 0.08
+
+[sub_resource type="Resource" id="blue_cone"]
+script = ExtResource("object")
+name = &"blue_cone"
+tags = PackedStringArray("blue")
+shape = "cone"
+color = Color(0.2, 0.55, 1, 1)
+size = 0.6
+swim_speed_m_per_s = 0.6
+float_height = 0.08
+
+[sub_resource type="Resource" id="green_cylinder"]
+script = ExtResource("object")
+name = &"green_cylinder"
+tags = PackedStringArray("green")
+shape = "cylinder"
+color = Color(0.15, 0.9, 0.25, 1)
+size = 0.6
+swim_speed_m_per_s = 0.4
+spin_speed_deg_per_s = 20.0
+float_height = 0.08
+
+[sub_resource type="Resource" id="white_ring"]
+script = ExtResource("object")
+name = &"white_ring"
+tags = PackedStringArray("white")
+shape = "torus"
+color = Color(1, 1, 1, 1)
+size = 0.6
+swim_speed_m_per_s = 0.15
+spin_speed_deg_per_s = 90.0
+float_height = 0.08
+
+[sub_resource type="Resource" id="orange_rock"]
+script = ExtResource("object")
+name = &"orange_rock"
+tags = PackedStringArray("orange", "still")
+shape = "box"
+color = Color(1, 0.5, 0, 1)
+size = 0.6
+swim_speed_m_per_s = 0.0
+float_height = 0.1
+
+[sub_resource type="Resource" id="purple_buoy"]
+script = ExtResource("object")
+name = &"purple_buoy"
+tags = PackedStringArray("purple", "still")
+shape = "capsule"
+color = Color(0.75, 0.3, 1, 1)
+size = 0.6
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 45.0
+float_height = 0.08
+
+[sub_resource type="Resource" id="still"]
+script = ExtResource("pool")
+name = &"still"
+objects = Array[ExtResource("object")]([SubResource("orange_rock"), SubResource("purple_buoy")])
+count = 1
+
+[sub_resource type="Resource" id="distractors"]
+script = ExtResource("pool")
+name = &"distractors"
+objects = Array[ExtResource("object")]([SubResource("red_ball"), SubResource("blue_cone"), SubResource("green_cylinder"), SubResource("white_ring")])
+count = 3
+
+[sub_resource type="Resource" id="fastest_spin"]
+script = ExtResource("task")
+question_text = "Catch the one that spins the FASTEST!"
+correct_answer_rule = "fastest spinning"
+objects_in_trial = Array[ExtResource("object")]([SubResource("red_ball"), SubResource("yellow_box"), SubResource("blue_cone"), SubResource("green_cylinder"), SubResource("white_ring")])
+objects_per_trial = 3
+name = &"fastest_spin"
+extra_pools = Array[ExtResource("pool")]([SubResource("still")])
+
+[sub_resource type="Resource" id="slowest_spin"]
+script = ExtResource("task")
+question_text = "Catch the one that spins the SLOWEST!"
+correct_answer_rule = "slowest spinning"
+objects_in_trial = Array[ExtResource("object")]([SubResource("red_ball"), SubResource("yellow_box"), SubResource("blue_cone"), SubResource("green_cylinder"), SubResource("white_ring")])
+objects_per_trial = 3
+name = &"slowest_spin"
+
+[sub_resource type="Resource" id="fastest_swim"]
+script = ExtResource("task")
+question_text = "Catch the one that swims the FASTEST!"
+correct_answer_rule = "fastest moving"
+objects_in_trial = Array[ExtResource("object")]([SubResource("red_ball"), SubResource("yellow_box"), SubResource("blue_cone"), SubResource("green_cylinder"), SubResource("white_ring")])
+objects_per_trial = 3
+name = &"fastest_swim"
+extra_pools = Array[ExtResource("pool")]([SubResource("still")])
+
+[sub_resource type="Resource" id="same_as_this"]
+script = ExtResource("task")
+question_text = "Catch the one like this!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("yellow_box")])
+reference_object = SubResource("yellow_box")
+show_reference_model = true
+name = &"same_as_this"
+extra_pools = Array[ExtResource("pool")]([SubResource("distractors")])
+
+[sub_resource type="Resource" id="stays_still"]
+script = ExtResource("task")
+question_text = "Catch one that stays in one place!"
+correct_answer_rule = "has tag"
+objects_in_trial = Array[ExtResource("object")]([SubResource("red_ball"), SubResource("yellow_box"), SubResource("blue_cone"), SubResource("green_cylinder"), SubResource("white_ring")])
+correct_tag = "still"
+objects_per_trial = 3
+retry_until_correct = true
+name = &"stays_still"
+extra_pools = Array[ExtResource("pool")]([SubResource("still")])
+
+[sub_resource type="Resource" id="red_one"]
+script = ExtResource("task")
+question_text = "Catch the RED one!"
+correct_answer_rule = "has tag"
+objects_in_trial = Array[ExtResource("object")]([SubResource("red_ball"), SubResource("yellow_box"), SubResource("blue_cone"), SubResource("green_cylinder"), SubResource("white_ring")])
+correct_tag = "red"
+time_limit = 20.0
+name = &"red_one"
+
+[sub_resource type="Resource" id="shell_per_catch"]
+script = ExtResource("reward_entry")
+
+[sub_resource type="Resource" id="gem_for_red_ball"]
+script = ExtResource("reward_entry")
+object_id = &"red_ball"
+item_id = &"red_gem"
+
+[sub_resource type="Resource" id="stars_for_still"]
+script = ExtResource("reward_entry")
+pool_id = &"still"
+item_id = &"star"
+quantity = 2
+
+[sub_resource type="Resource" id="rewards"]
+script = ExtResource("reward_table")
+entries = Array[ExtResource("reward_entry")]([SubResource("shell_per_catch"), SubResource("gem_for_red_ball"), SubResource("stars_for_still")])
+
+[resource]
+script = ExtResource("experiment")
+description = "One trial of each rule: fastest / slowest spinning, fastest moving, same as a 3D reference, has tag (retry until correct), and has tag with a 20 s limit."
+tasks = Array[ExtResource("task")]([SubResource("fastest_spin"), SubResource("slowest_spin"), SubResource("fastest_swim"), SubResource("same_as_this"), SubResource("stays_still"), SubResource("red_one")])
+look = ExtResource("lagoon")
+reward_table = SubResource("rewards")

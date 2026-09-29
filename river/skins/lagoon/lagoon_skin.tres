@@ -14,23 +14,14 @@
 [resource]
 script = ExtResource("1_skin")
 scenery = ExtResource("2_scenery")
-object_scenes = Dictionary[StringName, PackedScene]({
-&"blue_cone": ExtResource("6_tang"),
-&"fish_speed_1": ExtResource("4_clown"),
-&"fish_speed_2": ExtResource("4_clown"),
-&"fish_speed_3": ExtResource("4_clown"),
-&"fish_speed_4": ExtResource("4_clown"),
-&"fish_speed_5": ExtResource("4_clown"),
-&"green_cylinder": ExtResource("7_shark"),
-&"orange_rock": ExtResource("9_rock"),
-&"purple_buoy": ExtResource("10_manta"),
-&"red_ball": ExtResource("4_clown"),
-&"swim_blue": ExtResource("6_tang"),
-&"swim_green": ExtResource("7_shark"),
-&"swim_red": ExtResource("4_clown"),
-&"swim_white": ExtResource("8_dolphin"),
-&"swim_yellow": ExtResource("5_grey"),
-&"white_ring": ExtResource("8_dolphin"),
-&"yellow_box": ExtResource("5_grey")
-})
 spear_scene = ExtResource("3_spear")
+sphere = ExtResource("4_clown")
+box = ExtResource("5_grey")
+cylinder = ExtResource("7_shark")
+capsule = ExtResource("4_clown")
+cone = ExtResource("6_tang")
+torus = ExtResource("8_dolphin")
+object_scenes = Dictionary[StringName, PackedScene]({
+&"orange_rock": ExtResource("9_rock"),
+&"purple_buoy": ExtResource("10_manta")
+})

@@ -10,12 +10,8 @@
 [ext_resource type="Shader" uid="uid://bdncegx70k5ge" path="res://assets/shaders/floor_grid.gdshader" id="7_grid"]
 [ext_resource type="Script" uid="uid://u4v467pv0cty" path="res://scripts/xr_grab.gd" id="11_grab"]
 [ext_resource type="Script" uid="uid://cabtbicn2evsq" path="res://scripts/xr_move.gd" id="12_move"]
-[ext_resource type="Shader" uid="uid://b6ydk431jky8p" path="res://assets/shaders/per_eye_color.gdshader" id="12_ycdy4"]
-[ext_resource type="Shader" uid="uid://b3b2pbfumuxm4" path="res://assets/shaders/left_eye.gdshader" id="13_vivmo"]
-[ext_resource type="Shader" uid="uid://blrqyx0st2vu6" path="res://assets/shaders/right_eye.gdshader" id="14_2cqfq"]
 [ext_resource type="Script" uid="uid://bt5krry1meoum" path="res://scripts/xr_grab_hands.gd" id="15_hgrab"]
 [ext_resource type="PackedScene" path="res://river/river_game.tscn" id="20_river"]
-[ext_resource type="Resource" path="res://river/skins/lagoon/lagoon_skin.tres" id="21_skin"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_grab"]
 radius = 0.08
@@ -512,59 +508,6 @@ size = Vector3(0.1, 0.1, 0.75)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vivmo"]
 size = Vector3(1.2, 0.1, 0.1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_prop_grid"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lts4m"]
-albedo_color = Color(0.7750634, 0.7750634, 0.7750634, 1)
-metallic = 1.0
-roughness = 0.1
-
-[sub_resource type="BoxMesh" id="BoxMesh_prop"]
-material = SubResource("StandardMaterial3D_lts4m")
-size = Vector3(0.09, 0.09, 0.09)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_prop"]
-size = Vector3(0.09, 0.09, 0.09)
-
-[sub_resource type="SphereMesh" id="SphereMesh_prop"]
-radius = 0.05
-height = 0.1
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_prop"]
-radius = 0.05
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cegan"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_82xsv"]
-radius = 0.05
-height = 0.1
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_w48qg"]
-render_priority = 0
-shader = ExtResource("12_ycdy4")
-shader_parameter/left_eye_color = Color(1, 0, 0, 1)
-shader_parameter/right_eye_color = Color(0, 1, 0, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yaehf"]
-render_priority = 0
-shader = ExtResource("13_vivmo")
-
-[sub_resource type="TextMesh" id="TextMesh_lts4m"]
-text = "left eye"
-uppercase = true
-pixel_size = 0.001
-depth = 0.01
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_074og"]
-render_priority = 0
-shader = ExtResource("14_2cqfq")
-
-[sub_resource type="TextMesh" id="TextMesh_cegan"]
-text = "right eye"
-uppercase = true
-pixel_size = 0.001
-depth = 0.01
-
 [node name="Main" type="Node3D" unique_id=500145794]
 script = ExtResource("1_ig7tw")
 
@@ -671,64 +614,6 @@ shape = SubResource("BoxShape3D_vivmo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007018119, 0.07232797, -0.3838225)
 shape = SubResource("BoxShape3D_vivmo")
 
-[node name="Props" type="Node3D" parent="." unique_id=546788418]
-
-[node name="Box" type="RigidBody3D" parent="Props" unique_id=1568289628]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28429145, 0.89793026, -0.59422106)
-
-[node name="Mesh" type="MeshInstance3D" parent="Props/Box" unique_id=1991983902]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.09934425)
-material_override = SubResource("ShaderMaterial_prop_grid")
-mesh = SubResource("BoxMesh_prop")
-
-[node name="Collision" type="CollisionShape3D" parent="Props/Box" unique_id=64314266]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.09825504)
-shape = SubResource("BoxShape3D_prop")
-
-[node name="Ball" type="RigidBody3D" parent="Props" unique_id=362352031]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.6)
-
-[node name="Mesh" type="MeshInstance3D" parent="Props/Ball" unique_id=1380581418]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.12304139)
-mesh = SubResource("SphereMesh_prop")
-
-[node name="Collision" type="CollisionShape3D" parent="Props/Ball" unique_id=1357242908]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.121456295)
-shape = SubResource("SphereShape3D_prop")
-
-[node name="secretnopassthroughball" type="RigidBody3D" parent="Props" unique_id=667379221]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17854202, 0.95, -0.5351477)
-
-[node name="Mesh" type="MeshInstance3D" parent="Props/secretnopassthroughball" unique_id=839355466]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.004936129, 0, 0.12304139)
-material_override = SubResource("ShaderMaterial_cegan")
-mesh = SubResource("SphereMesh_82xsv")
-
-[node name="Collision" type="CollisionShape3D" parent="Props/secretnopassthroughball" unique_id=207799532]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.121456295)
-shape = SubResource("SphereShape3D_prop")
-
-[node name="PerEyeBox" type="RigidBody3D" parent="Props" unique_id=1738426715]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31006065, 0.9039176, -0.71345115)
-
-[node name="Mesh" type="MeshInstance3D" parent="Props/PerEyeBox" unique_id=822659639]
-material_override = SubResource("ShaderMaterial_w48qg")
-mesh = SubResource("BoxMesh_prop")
-
-[node name="Collision" type="CollisionShape3D" parent="Props/PerEyeBox" unique_id=47353824]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0020998716)
-shape = SubResource("BoxShape3D_prop")
-
-[node name="lefteyetext" type="MeshInstance3D" parent="Props/PerEyeBox" unique_id=2076739899]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.019794822, 0.04300797)
-material_override = SubResource("ShaderMaterial_yaehf")
-mesh = SubResource("TextMesh_lts4m")
-
-[node name="righteyetext" type="MeshInstance3D" parent="Props/PerEyeBox" unique_id=2135147407]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.014873862, 0.04375124)
-material_override = SubResource("ShaderMaterial_074og")
-mesh = SubResource("TextMesh_cegan")
-
 [node name="SunLight" type="DirectionalLight3D" parent="." unique_id=1844096403]
 transform = Transform3D(0.86601907, -0.3535631, 0.35355926, 0, 0.70710295, 0.70711064, -0.500011, -0.61237127, 0.6123646, 0, 2.9986405, 0)
 light_energy = 1.1
@@ -741,7 +626,7 @@ directional_shadow_max_distance = 12.0
 [node name="Passthrough" type="Node" parent="." unique_id=1290157622]
 script = ExtResource("6_pass")
 world_environment = NodePath("../WorldEnvironment")
-hide_in_passthrough = Array[NodePath]([NodePath("../Floor"), NodePath("../PassthroughTutorialText"), NodePath("../Props/secretnopassthroughball")])
+hide_in_passthrough = Array[NodePath]([NodePath("../Floor"), NodePath("../PassthroughTutorialText")])
 
 [node name="PassthroughTutorialText" type="Label3D" parent="." unique_id=8889272]
 transform = Transform3D(0.96385396, 0, -0.26643118, 0, 1, 0, 0.26643118, 0, 0.96385396, 1.6474805, 1.1432885, -2.0095248)
@@ -753,8 +638,8 @@ to toggle passthrough!"
 tracker = &"right_hand"
 pose = &"aim"
 
-[node name="RiverGame" parent="." unique_id=1740212234 node_paths=PackedStringArray("aim_controller", "camera") instance=ExtResource("20_river")]
+[node name="RiverGame" parent="." unique_id=1740212234 node_paths=PackedStringArray("aim_controller", "menu_controller", "camera") instance=ExtResource("20_river")]
 aim_controller = NodePath("../XROrigin3D/XRAimRight")
+menu_controller = NodePath("../XROrigin3D/XRControllerLeft")
 camera = NodePath("../XROrigin3D/XRCamera3D")
-skin = ExtResource("21_skin")
-hide_with_scenery = Array[NodePath]([NodePath("../Floor"), NodePath("../Table"), NodePath("../Props"), NodePath("../PassthroughTutorialText"), NodePath("../SunLight")])
+hide_with_scenery = Array[NodePath]([NodePath("../Floor"), NodePath("../Table"), NodePath("../PassthroughTutorialText"), NodePath("../SunLight")])

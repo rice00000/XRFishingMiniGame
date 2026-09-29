@@ -6,6 +6,8 @@ extends Node
 
 ## Emit once per press of the single confirm input.
 signal confirm_pressed
+## Emit when the experimenter asks for the experiment menu (aborts a running experiment).
+signal back_pressed
 
 
 ## Current aim as [origin, direction], or [] when there is nothing to aim with.
