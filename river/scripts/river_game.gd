@@ -132,7 +132,10 @@ func _on_harpoon_fired(target: RiverObject, time_usec: int, aim_origin: Vector3,
 		logger.log_rewards(rewards)
 
 	if correct or not current_task.retry_until_correct:
-		_finish_trial("correct" if correct else "wrong", session.correct_text if correct else session.wrong_text, correct)
+		var feedback := session.correct_text if correct else session.wrong_text
+		if correct and session.show_time_on_correct:
+			feedback += "\n%.2f s" % ((time_usec - _trial_start_usec) / 1_000_000.0)
+		_finish_trial("correct" if correct else "wrong", feedback, correct)
 	else:
 		await _show_feedback(session.wrong_text, false)
 		_set_accepting(true)

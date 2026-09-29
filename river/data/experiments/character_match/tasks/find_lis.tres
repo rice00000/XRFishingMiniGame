@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="RiverTask" format=3]
+[gd_resource type="Resource" script_class="RiverTask" format=3 uid="uid://biqfc6fcx6ehe"]
 
-[ext_resource type="Script" path="res://river/scripts/river_task.gd" id="1_task"]
-[ext_resource type="Script" path="res://river/scripts/standard_rule.gd" id="2_rule"]
-[ext_resource type="Script" path="res://river/scripts/spawn_pool.gd" id="3_pool"]
+[ext_resource type="Script" uid="uid://dj77tos8bb2yl" path="res://river/scripts/river_task.gd" id="1_task"]
+[ext_resource type="Script" uid="uid://crxqeh4s2i6dx" path="res://river/scripts/standard_rule.gd" id="2_rule"]
+[ext_resource type="Script" uid="uid://crdbf2m87l0fq" path="res://river/scripts/spawn_pool.gd" id="3_pool"]
 [ext_resource type="Resource" path="res://river/data/experiments/character_match/characters_pool.tres" id="4_pool"]
 [ext_resource type="Resource" path="res://river/data/experiments/character_match/objects/lis.tres" id="5_target"]
-[ext_resource type="Texture2D" path="res://river/data/experiments/character_match/images/lis.png" id="6_image"]
+[ext_resource type="Texture2D" uid="uid://ktrnojqvvum6" path="res://river/data/experiments/character_match/images/lis.png" id="6_image"]
 
 [sub_resource type="Resource" id="Resource_rule"]
 script = ExtResource("2_rule")

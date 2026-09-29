@@ -12,6 +12,8 @@ extends Resource
 @export_group("Feedback")
 ## Empty text = show nothing.
 @export var correct_text := "Great catch!"
+## Adds the time from trial start to the catch (e.g. "1.84 s") under the correct text.
+@export var show_time_on_correct := false
 @export var wrong_text := "Not that one"
 @export var timeout_text := ""
 @export var end_text := "All done!"

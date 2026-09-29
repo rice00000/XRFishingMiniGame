@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="RiverSkin" format=3]
+[gd_resource type="Resource" script_class="RiverSkin" format=3 uid="uid://cp5ryqh4j5om5"]
 
-[ext_resource type="Script" path="res://river/scripts/skin/river_skin.gd" id="1_skin"]
+[ext_resource type="Script" uid="uid://u60f3l07s3t" path="res://river/scripts/skin/river_skin.gd" id="1_skin"]
 [ext_resource type="PackedScene" path="res://river/skins/lagoon/lagoon_scenery.tscn" id="2_scenery"]
 [ext_resource type="PackedScene" path="res://river/skins/lagoon/models/trident.tscn" id="3_spear"]
 [ext_resource type="PackedScene" path="res://river/skins/lagoon/models/clownfish.tscn" id="4_clown"]
@@ -15,12 +15,22 @@
 script = ExtResource("1_skin")
 scenery = ExtResource("2_scenery")
 object_scenes = Dictionary[StringName, PackedScene]({
-&"red_ball": ExtResource("4_clown"),
-&"yellow_box": ExtResource("5_grey"),
 &"blue_cone": ExtResource("6_tang"),
+&"fish_speed_1": ExtResource("4_clown"),
+&"fish_speed_2": ExtResource("4_clown"),
+&"fish_speed_3": ExtResource("4_clown"),
+&"fish_speed_4": ExtResource("4_clown"),
+&"fish_speed_5": ExtResource("4_clown"),
 &"green_cylinder": ExtResource("7_shark"),
-&"white_ring": ExtResource("8_dolphin"),
 &"orange_rock": ExtResource("9_rock"),
-&"purple_buoy": ExtResource("10_manta")
+&"purple_buoy": ExtResource("10_manta"),
+&"red_ball": ExtResource("4_clown"),
+&"swim_blue": ExtResource("6_tang"),
+&"swim_green": ExtResource("7_shark"),
+&"swim_red": ExtResource("4_clown"),
+&"swim_white": ExtResource("8_dolphin"),
+&"swim_yellow": ExtResource("5_grey"),
+&"white_ring": ExtResource("8_dolphin"),
+&"yellow_box": ExtResource("5_grey")
 })
 spear_scene = ExtResource("3_spear")

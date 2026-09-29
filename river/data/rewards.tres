@@ -1,18 +1,15 @@
-[gd_resource type="Resource" script_class="RewardTable" format=3]
+[gd_resource type="Resource" script_class="RewardTable" format=3 uid="uid://r6whm0p1r5kq"]
 
-[ext_resource type="Script" path="res://river/scripts/reward_table.gd" id="1_table"]
-[ext_resource type="Script" path="res://river/scripts/reward_entry.gd" id="2_entry"]
+[ext_resource type="Script" uid="uid://d1ilf2n5mawus" path="res://river/scripts/reward_table.gd" id="1_table"]
+[ext_resource type="Script" uid="uid://c6tgncgcfxq8g" path="res://river/scripts/reward_entry.gd" id="2_entry"]
 
 [sub_resource type="Resource" id="Resource_any"]
 script = ExtResource("2_entry")
-item_id = &"shell"
-quantity = 1
 
 [sub_resource type="Resource" id="Resource_red"]
 script = ExtResource("2_entry")
 object_id = &"red_ball"
 item_id = &"red_gem"
-quantity = 1
 
 [sub_resource type="Resource" id="Resource_still"]
 script = ExtResource("2_entry")
