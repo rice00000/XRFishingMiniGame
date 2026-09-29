@@ -51,13 +51,6 @@ func _ready() -> void:
 		push_warning("XRPassthrough|WARN: no WorldEnvironment assigned, or no enviornment within the 
 		WorldEnviornment. You may have issues with the sky blocking passthrough")
 
-	# For each object you request to be hidden in passthrough, we store the Node itself plus if it was hidden.
-	# This is to prevent objects you specifically hide from being unhidden in testing.
-	for path in hide_in_passthrough:
-		var node := get_node_or_null(path) as Node3D
-		_hidden.append(node)
-		_hidden_was_visible.append(node.visible)
-
 	# We will here link the function to the session_begun signal to flip the _ready_to_apply flag to true when
 	# and only when the session is ready. Note: we never clear this flag. Implement this additional guard if you'd like
 	# on things like session pause (headset put down). The purpose of this is because set_environment_blend_mode only 
@@ -66,6 +59,17 @@ func _ready() -> void:
 
 
 func _on_session_begun() -> void:
+	# For each object you request to be hidden in passthrough, we store the Node itself plus if it was hidden.
+	# This is to prevent objects you specifically hide from being unhidden in testing.
+	# Captured here (not in _ready) so nodes that other scripts hide during their own _ready
+	# (e.g. the floor hidden by the scenery) are not made visible again by the first _apply.
+	if _hidden.is_empty():
+		for path in hide_in_passthrough:
+			var node := get_node_or_null(path) as Node3D
+			if node == null:
+				continue
+			_hidden.append(node)
+			_hidden_was_visible.append(node.visible)
 	_ready_to_apply = true
 	_apply(enabled)
 
