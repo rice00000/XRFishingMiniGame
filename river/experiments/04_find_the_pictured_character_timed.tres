@@ -1,69 +1,75 @@
-[gd_resource type="Resource" script_class="Experiment" format=3]
+[gd_resource type="Resource" script_class="Experiment" format=3 uid="uid://srjcfekwslr8"]
 
-[ext_resource type="Script" path="res://river/scripts/experiment.gd" id="experiment"]
-[ext_resource type="Script" path="res://river/scripts/river_task.gd" id="task"]
-[ext_resource type="Script" path="res://river/scripts/river_object_config.gd" id="object"]
-[ext_resource type="Resource" path="res://river/skins/lagoon/lagoon_skin.tres" id="lagoon"]
-[ext_resource type="PackedScene" path="res://river/art/characters/adventurer.glb" id="adventurer_model"]
-[ext_resource type="Texture2D" path="res://river/art/characters/pictures/adventurer.png" id="adventurer_picture"]
-[ext_resource type="PackedScene" path="res://river/art/characters/pirate.glb" id="pirate_model"]
-[ext_resource type="Texture2D" path="res://river/art/characters/pictures/pirate.png" id="pirate_picture"]
-[ext_resource type="PackedScene" path="res://river/art/characters/astronaut.glb" id="astronaut_model"]
-[ext_resource type="Texture2D" path="res://river/art/characters/pictures/astronaut.png" id="astronaut_picture"]
-[ext_resource type="PackedScene" path="res://river/art/characters/matt.glb" id="matt_model"]
-[ext_resource type="Texture2D" path="res://river/art/characters/pictures/matt.png" id="matt_picture"]
-[ext_resource type="PackedScene" path="res://river/art/characters/lis.glb" id="lis_model"]
-[ext_resource type="Texture2D" path="res://river/art/characters/pictures/lis.png" id="lis_picture"]
+[ext_resource type="Script" uid="uid://crdbf2m87l0fq" path="res://river/scripts/spawn_pool.gd" id="4_oslbp"]
+[ext_resource type="PackedScene" uid="uid://5gx6nuq032iq" path="res://river/art/characters/adventurer.glb" id="adventurer_model"]
+[ext_resource type="Texture2D" uid="uid://hmdwaiubadi8" path="res://river/art/characters/pictures/adventurer.png" id="adventurer_picture"]
+[ext_resource type="PackedScene" uid="uid://deka47xrlah1s" path="res://river/art/characters/astronaut.glb" id="astronaut_model"]
+[ext_resource type="Texture2D" uid="uid://cnfnob13ksupr" path="res://river/art/characters/pictures/astronaut.png" id="astronaut_picture"]
+[ext_resource type="Script" uid="uid://3otwq2gxcod7" path="res://river/scripts/experiment.gd" id="experiment"]
+[ext_resource type="Resource" uid="uid://cp5ryqh4j5om5" path="res://river/skins/lagoon/lagoon_skin.tres" id="lagoon"]
+[ext_resource type="PackedScene" uid="uid://cu4cttka1rqvt" path="res://river/art/characters/lis.glb" id="lis_model"]
+[ext_resource type="Texture2D" uid="uid://ktrnojqvvum6" path="res://river/art/characters/pictures/lis.png" id="lis_picture"]
+[ext_resource type="PackedScene" uid="uid://bco72lapcubsw" path="res://river/art/characters/matt.glb" id="matt_model"]
+[ext_resource type="Texture2D" uid="uid://byuhskqvvraas" path="res://river/art/characters/pictures/matt.png" id="matt_picture"]
+[ext_resource type="Script" uid="uid://dvrhk186x6spk" path="res://river/scripts/river_object_config.gd" id="object"]
+[ext_resource type="PackedScene" uid="uid://cvafsmnb2t5qh" path="res://river/art/characters/pirate.glb" id="pirate_model"]
+[ext_resource type="Texture2D" uid="uid://cxi34p1301c0b" path="res://river/art/characters/pictures/pirate.png" id="pirate_picture"]
+[ext_resource type="Script" uid="uid://dj77tos8bb2yl" path="res://river/scripts/river_task.gd" id="task"]
 
 [sub_resource type="Resource" id="adventurer"]
 script = ExtResource("object")
 name = &"adventurer"
+size = 0.9
 scene = ExtResource("adventurer_model")
 picture = ExtResource("adventurer_picture")
-size = 0.9
 swim_speed_m_per_s = 0.0
 spin_speed_deg_per_s = 400.0
 float_height = 0.4
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="pirate"]
 script = ExtResource("object")
 name = &"pirate"
+size = 0.9
 scene = ExtResource("pirate_model")
 picture = ExtResource("pirate_picture")
-size = 0.9
 swim_speed_m_per_s = 0.0
 spin_speed_deg_per_s = 400.0
 float_height = 0.4
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="astronaut"]
 script = ExtResource("object")
 name = &"astronaut"
+size = 0.9
 scene = ExtResource("astronaut_model")
 picture = ExtResource("astronaut_picture")
-size = 0.9
 swim_speed_m_per_s = 0.0
 spin_speed_deg_per_s = 400.0
 float_height = 0.4
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="matt"]
 script = ExtResource("object")
 name = &"matt"
+size = 0.9
 scene = ExtResource("matt_model")
 picture = ExtResource("matt_picture")
-size = 0.9
 swim_speed_m_per_s = 0.0
 spin_speed_deg_per_s = 400.0
 float_height = 0.4
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="lis"]
 script = ExtResource("object")
 name = &"lis"
+size = 0.9
 scene = ExtResource("lis_model")
 picture = ExtResource("lis_picture")
-size = 0.9
 swim_speed_m_per_s = 0.0
 spin_speed_deg_per_s = 400.0
 float_height = 0.4
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="find_this_one"]
 script = ExtResource("task")
@@ -78,7 +84,6 @@ script = ExtResource("experiment")
 description = "Same as 03, but the catch time is shown after each correct answer."
 tasks = Array[ExtResource("task")]([SubResource("find_this_one")])
 shuffle_trial_order = true
-look = ExtResource("lagoon")
 correct_text = "Hit!"
 show_time_on_correct = true
 end_text = "Thank you!"
