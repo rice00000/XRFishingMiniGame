@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://cabtbicn2evsq" path="res://scripts/xr_move.gd" id="12_move"]
 [ext_resource type="Script" uid="uid://bt5krry1meoum" path="res://scripts/xr_grab_hands.gd" id="15_hgrab"]
 [ext_resource type="PackedScene" path="res://river/river_game.tscn" id="20_river"]
+[ext_resource type="AudioStream" path="res://river/audio/music/vrduck.ogg" id="21_bgm"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_grab"]
 radius = 0.08
@@ -492,22 +493,6 @@ size = Vector2(10.2, 10.2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(10, 0.2, 10)
 
-[sub_resource type="StandardMaterial3D" id="Mat_table"]
-albedo_color = Color(0.34, 0.29, 0.24, 1)
-roughness = 0.7
-
-[sub_resource type="BoxMesh" id="BoxMesh_table"]
-size = Vector3(1.2, 0.06, 0.7)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_table"]
-size = Vector3(1.2, 0.06, 0.7)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_lts4m"]
-size = Vector3(0.1, 0.1, 0.75)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_vivmo"]
-size = Vector3(1.2, 0.1, 0.1)
-
 [node name="Main" type="Node3D" unique_id=500145794]
 script = ExtResource("1_ig7tw")
 
@@ -586,34 +571,6 @@ mesh = SubResource("PlaneMesh_floor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 shape = SubResource("BoxShape3D_floor")
 
-[node name="Table" type="StaticBody3D" parent="." unique_id=1222995565]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.6)
-
-[node name="Mesh" type="MeshInstance3D" parent="Table" unique_id=1507181728]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0029900074, 0)
-material_override = SubResource("Mat_table")
-mesh = SubResource("BoxMesh_table")
-
-[node name="Collision" type="CollisionShape3D" parent="Table" unique_id=1762058184]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0020278692, 0)
-shape = SubResource("BoxShape3D_table")
-
-[node name="RightWall" type="CollisionShape3D" parent="Table" unique_id=2111551738]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6405138, 0.07232797, 0)
-shape = SubResource("BoxShape3D_lts4m")
-
-[node name="LeftWall" type="CollisionShape3D" parent="Table" unique_id=27880957]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.63855135, 0.07232797, 0)
-shape = SubResource("BoxShape3D_lts4m")
-
-[node name="FrontWall" type="CollisionShape3D" parent="Table" unique_id=827357064]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007018119, 0.07232797, 0.38712388)
-shape = SubResource("BoxShape3D_vivmo")
-
-[node name="BackWall" type="CollisionShape3D" parent="Table" unique_id=583203132]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007018119, 0.07232797, -0.3838225)
-shape = SubResource("BoxShape3D_vivmo")
-
 [node name="SunLight" type="DirectionalLight3D" parent="." unique_id=1844096403]
 transform = Transform3D(0.86601907, -0.3535631, 0.35355926, 0, 0.70710295, 0.70711064, -0.500011, -0.61237127, 0.6123646, 0, 2.9986405, 0)
 light_energy = 1.1
@@ -643,4 +600,9 @@ aim_controller = NodePath("../XROrigin3D/XRAimRight")
 menu_controller = NodePath("../XROrigin3D/XRControllerLeft")
 hand_controller = NodePath("../XROrigin3D/XRControllerRight")
 camera = NodePath("../XROrigin3D/XRCamera3D")
-hide_with_scenery = Array[NodePath]([NodePath("../Floor"), NodePath("../Table"), NodePath("../PassthroughTutorialText"), NodePath("../SunLight")])
+hide_with_scenery = Array[NodePath]([NodePath("../Floor"), NodePath("../PassthroughTutorialText"), NodePath("../SunLight")])
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("21_bgm")
+autoplay = true
+bus = &"Music"
