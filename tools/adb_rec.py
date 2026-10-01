@@ -286,22 +286,26 @@ def collect(adb, remote_paths, stamp):
 
 def stop_native(adb):
     native_intent(adb, "STOP_INTERNAL_CAPTURE_TO_DISK")
-    files, last = [], None
+    files, last, keep_device = [], None, False
     for _ in range(60):  # wait up to 30s: done when the size is unchanged across two polls and not a tiny placeholder
         time.sleep(0.5)
         files = native_new_files(adb)
         sizes = [adb.sh(f"stat -c %s {NATIVE_DIR}/{f}", check=False) for f in files]
-        if files and all(s.isdigit() and int(s) > 4096 for s in sizes) and sizes == last:
+        # Size alone is not enough: the system writes in chunks and finalizes (moov atom) late, so also require moov
+        done = all(adb.sh(f"grep -c -a moov {NATIVE_DIR}/{f}", check=False) not in ("", "0") for f in files) if files else False
+        if files and done and all(s.isdigit() and int(s) > 4096 for s in sizes) and sizes == last:
             break
         last = sizes
     else:
-        print("[warning] file size still changing after 30s; pulling as-is")
+        print("[warning] recording not finalized after 30s (no moov); pulling as-is, device copy will be kept")
+        keep_device = True
     if not files:
         die("No new recording file found (it may have been stopped and deleted in the headset)")
     # the headset clock is unreliable; name the file with the PC's current time
     collect(adb, [f"{NATIVE_DIR}/{f}" for f in files], datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
-    for f in files:  # local copy confirmed, delete the device copy
-        adb.sh(f"rm -f {NATIVE_DIR}/{f}", check=False)
+    if not keep_device:
+        for f in files:  # local copy confirmed, delete the device copy
+            adb.sh(f"rm -f {NATIVE_DIR}/{f}", check=False)
     for prop in NATIVE_PROPS.values():  # restore quality props so later manual recordings are unaffected
         adb.sh(f'setprop {prop} ""', check=False)
 
