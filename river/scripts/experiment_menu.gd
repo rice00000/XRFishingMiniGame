@@ -14,11 +14,11 @@ const SETTINGS_PATH := "user://river_settings.cfg"
 @export var rows_per_page := 6
 @export var font_size := 48
 @export var small_font_size := 30
-@export var text_color := Color.WHITE
+@export var text_color := BeachStyle.CREAM
 ## Matches the harpoon reticle.
-@export var hover_color := Color(1.0, 0.9, 0.0)
-@export var button_color := Color(0.18, 0.18, 0.18)
-@export var panel_color := Color.BLACK
+@export var hover_color := BeachStyle.SUN
+@export var button_color := BeachStyle.CARD
+@export var panel_color := BeachStyle.DEEP
 @export var warning_color := Color(1.0, 0.6, 0.15)
 
 ## Where aim and confirm come from. Set by RiverGame.
@@ -127,6 +127,7 @@ func _on_confirm() -> void:
 	if not visible or _hovered < 0:
 		return
 	input.pulse()
+	GameAudio.play(&"ui_button")
 	_buttons[_hovered].action.call()
 
 
@@ -147,7 +148,7 @@ func _rebuild() -> void:
 	var arrow := row_height * 1.6
 	var y := -margin
 
-	_add_label("Choose an experiment", Vector2(0, y - row_height * 0.5), font_size)
+	_add_label("Choose an experiment", Vector2(0, y - row_height * 0.5), font_size).modulate = BeachStyle.SAND
 	y -= row_height + gap
 
 	# Participant: [<] P007 [>]
@@ -179,7 +180,7 @@ func _rebuild() -> void:
 		_add_label("Page %d / %d" % [_page + 1, pages], Vector2(0, y - row_height * 0.5), small_font_size)
 		y -= row_height + gap
 
-	var description_height := row_height * 1.8
+	var description_height := row_height * 2.3
 	_description = _add_label("", Vector2(0, y - description_height * 0.5), small_font_size)
 	_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_description.width = inner / _description.pixel_size
@@ -188,7 +189,7 @@ func _rebuild() -> void:
 	footer_label.modulate = Color(text_color, 0.6)
 	y -= row_height * 0.5 + margin
 
-	_add_quad(Rect2(-panel_width * 0.5, y, panel_width, -y), panel_color, 0.0)
+	_add_quad(Rect2(-panel_width * 0.5, y, panel_width, -y), panel_color, 0.0, 0.1, BeachStyle.SAND)
 	_content.position.y = -y * 0.5
 	_show_description(null)
 
@@ -215,7 +216,8 @@ func _set_hovered(index: int) -> void:
 	_hovered = index
 	if _hovered >= 0:
 		_style_button(_buttons[_hovered], true)
-	_show_description(_buttons[_hovered].get("experiment") if _hovered >= 0 else null)
+	var experiment: Experiment = _buttons[_hovered].get("experiment") if _hovered >= 0 else null
+	_show_description(experiment)
 
 
 func _show_description(experiment: Experiment) -> void:
@@ -233,15 +235,15 @@ func _show_description(experiment: Experiment) -> void:
 
 
 func _style_button(button: Dictionary, hovered: bool) -> void:
-	(button.bg.mesh.material as StandardMaterial3D).albedo_color = hover_color if hovered else button_color
-	button.label.modulate = Color.BLACK if hovered else text_color
-	button.label.outline_modulate = Color(0, 0, 0, 0) if hovered else Color.BLACK
+	(button.bg.material_override as ShaderMaterial).set_shader_parameter("fill", hover_color if hovered else button_color)
+	button.label.modulate = BeachStyle.INK if hovered else text_color
+	button.label.outline_modulate = Color(0, 0, 0, 0) if hovered else BeachStyle.INK
 
 
 func _add_button(rect: Rect2, text: String, action: Callable) -> int:
 	var button := {
 		"rect": rect,
-		"bg": _add_quad(rect, button_color, 0.005),
+		"bg": _add_quad(rect, button_color, 0.005, row_height * 0.3),
 		"label": _add_label(text, rect.get_center(), _fitting_font_size(text, rect.size.x - row_height * 0.4)),
 		"action": action,
 	}
@@ -257,13 +259,8 @@ func _fitting_font_size(text: String, width: float) -> int:
 
 
 ## `rect` is in the panel plane, y up.
-func _add_quad(rect: Rect2, color: Color, z: float) -> MeshInstance3D:
-	var quad := QuadMesh.new()
-	quad.size = rect.size
-	quad.material = _material(color, false)
-	var mesh := MeshInstance3D.new()
-	mesh.mesh = quad
-	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+func _add_quad(rect: Rect2, color: Color, z: float, radius := 0.0, edge := Color(0, 0, 0, 0)) -> MeshInstance3D:
+	var mesh := BeachStyle.make_panel(rect.size, radius, color, edge, 0.012, BeachStyle.BACK if z == 0.0 else BeachStyle.FRONT)
 	mesh.position = Vector3(rect.get_center().x, rect.get_center().y, z)
 	_content.add_child(mesh)
 	return mesh
@@ -275,10 +272,8 @@ func _add_label(text: String, center: Vector2, size: int) -> Label3D:
 	label.pixel_size = 0.004
 	label.font_size = size
 	label.outline_size = size / 4
-	label.modulate = text_color
 	label.position = Vector3(center.x, center.y, 0.012)
-	label.render_priority = 10
-	label.outline_render_priority = 9
+	BeachStyle.style_label(label, text_color)
 	_content.add_child(label)
 	return label
 

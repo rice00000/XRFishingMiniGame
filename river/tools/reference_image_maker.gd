@@ -11,6 +11,8 @@ extends Node
 @export var background := Color(0, 0, 0, 0)
 ## Camera tilt; slightly from above reads well for characters and fish.
 @export var camera_pitch_degrees := -8.0
+## Turns the object around the vertical axis before shooting (0 = as it faces the camera).
+@export var yaw_degrees := 0.0
 ## Render with the experiment skin's models instead of the objects' own visuals.
 @export var use_experiment_skin := false
 
@@ -54,7 +56,7 @@ func _ready() -> void:
 	var skin: RiverSkin = experiment.look if use_experiment_skin else null
 	for cfg: RiverObjectConfig in configs.values():
 		var visual := RiverObject.build_visual(cfg, skin.scene_for(cfg) if skin else null)
-		visual.basis = Basis.from_euler(cfg.start_tilt_degrees * (PI / 180.0))
+		visual.basis = Basis(Vector3.UP, deg_to_rad(yaw_degrees)) * Basis.from_euler(cfg.start_tilt_degrees * (PI / 180.0))
 		viewport.add_child(visual)
 
 		# Frame the object: its size fills ~85% of the image height.

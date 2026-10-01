@@ -1,7 +1,6 @@
 class_name TaskUI
 extends Node3D
-## World-space task panel: text, optional reference image or model, feedback and
-## inventory. Pure presentation; it never decides what is correct.
+## World-space task panel: text, optional reference image or model, and feedback. Pure presentation; it never decides what is correct.
 
 ## Background, hidden together with the task between trials.
 @export var panel: Node3D
@@ -9,19 +8,24 @@ extends Node3D
 @export var reference_image: Sprite3D
 @export var reference_model: Node3D
 @export var feedback_label: Label3D
-@export var inventory_label: Label3D
 ## Must match the Panel mesh width; used to lay out text next to a reference.
 @export var panel_width := 3.2
 ## Height of the reference image / model in metres.
 @export var reference_height := 0.75
-@export var positive_color := Color(0.35, 1.0, 0.35)
-@export var negative_color := Color(1.0, 0.6, 0.15)
+@export var positive_color := BeachStyle.MINT
+@export var negative_color := BeachStyle.CORAL
 
 ## Optional look for the reference model. Set by RiverGame.
 var skin: RiverSkin
 
 
 func _ready() -> void:
+	var panel_mesh := panel as MeshInstance3D
+	if panel_mesh and panel_mesh.mesh is QuadMesh:
+		var size: Vector2 = (panel_mesh.mesh as QuadMesh).size
+		panel_mesh.material_override = BeachStyle.panel_material(size, 0.1, BeachStyle.DEEP, BeachStyle.SAND)
+	BeachStyle.style_label(task_label)
+	BeachStyle.style_label(feedback_label)
 	hide_task()
 	hide_feedback()
 
@@ -72,9 +76,3 @@ func show_feedback(text: String, positive: bool) -> void:
 func hide_feedback() -> void:
 	feedback_label.visible = false
 
-
-func show_inventory(items: Dictionary) -> void:
-	var lines := PackedStringArray()
-	for item in items:
-		lines.append("%s x %d" % [item, items[item]])
-	inventory_label.text = "\n".join(lines)

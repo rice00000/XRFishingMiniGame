@@ -1,21 +1,29 @@
-[gd_resource type="Resource" script_class="Experiment" format=3]
+[gd_resource type="Resource" script_class="Experiment" format=3 uid="uid://ia801k7fns1a"]
 
-[ext_resource type="Script" path="res://river/scripts/experiment.gd" id="experiment"]
-[ext_resource type="Script" path="res://river/scripts/river_task.gd" id="task"]
-[ext_resource type="Script" path="res://river/scripts/river_object_config.gd" id="object"]
-[ext_resource type="Script" path="res://river/scripts/reward_table.gd" id="reward_table"]
-[ext_resource type="Script" path="res://river/scripts/reward_entry.gd" id="reward_entry"]
-[ext_resource type="Resource" path="res://river/skins/lagoon/lagoon_skin.tres" id="lagoon"]
+[ext_resource type="Script" uid="uid://crdbf2m87l0fq" path="res://river/scripts/spawn_pool.gd" id="6_vb72d"]
+[ext_resource type="Script" uid="uid://3otwq2gxcod7" path="res://river/scripts/experiment.gd" id="experiment"]
+[ext_resource type="Resource" uid="uid://cp5ryqh4j5om5" path="res://river/skins/lagoon/lagoon_skin.tres" id="lagoon"]
+[ext_resource type="Script" uid="uid://dvrhk186x6spk" path="res://river/scripts/river_object_config.gd" id="object"]
+[ext_resource type="Script" uid="uid://c6tgncgcfxq8g" path="res://river/scripts/reward_entry.gd" id="reward_entry"]
+[ext_resource type="Script" uid="uid://d1ilf2n5mawus" path="res://river/scripts/reward_table.gd" id="reward_table"]
+[ext_resource type="Script" uid="uid://dj77tos8bb2yl" path="res://river/scripts/river_task.gd" id="task"]
+
+[sub_resource type="Resource" id="shell_per_catch"]
+script = ExtResource("reward_entry")
+
+[sub_resource type="Resource" id="rewards"]
+script = ExtResource("reward_table")
+entries = Array[ExtResource("reward_entry")]([SubResource("shell_per_catch")])
 
 [sub_resource type="Resource" id="red"]
 script = ExtResource("object")
 name = &"red"
 tags = PackedStringArray("red")
-shape = "sphere"
 color = Color(1, 0.12, 0.1, 1)
 size = 0.6
 swim_speed_m_per_s = 0.15
 float_height = 0.08
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="yellow"]
 script = ExtResource("object")
@@ -24,8 +32,8 @@ tags = PackedStringArray("yellow")
 shape = "box"
 color = Color(1, 0.85, 0.1, 1)
 size = 0.6
-swim_speed_m_per_s = 0.3
 float_height = 0.08
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="blue"]
 script = ExtResource("object")
@@ -36,6 +44,7 @@ color = Color(0.15, 0.4, 1, 1)
 size = 0.6
 swim_speed_m_per_s = 0.45
 float_height = 0.08
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="green"]
 script = ExtResource("object")
@@ -46,6 +55,7 @@ color = Color(0.1, 0.8, 0.25, 1)
 size = 0.6
 swim_speed_m_per_s = 0.6
 float_height = 0.08
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="white"]
 script = ExtResource("object")
@@ -56,25 +66,17 @@ color = Color(0.95, 0.95, 0.95, 1)
 size = 0.6
 swim_speed_m_per_s = 0.75
 float_height = 0.08
+variable_values = PackedFloat64Array()
 
 [sub_resource type="Resource" id="catch_fastest"]
 script = ExtResource("task")
 question_text = "Catch the one that swims the FASTEST!"
-correct_answer_rule = "fastest moving"
 objects_in_trial = Array[ExtResource("object")]([SubResource("red"), SubResource("yellow"), SubResource("blue"), SubResource("green"), SubResource("white")])
 repeat_times = 3
-
-[sub_resource type="Resource" id="shell_per_catch"]
-script = ExtResource("reward_entry")
-
-[sub_resource type="Resource" id="rewards"]
-script = ExtResource("reward_table")
-entries = Array[ExtResource("reward_entry")]([SubResource("shell_per_catch")])
 
 [resource]
 script = ExtResource("experiment")
 description = "Five different fish (shape and colour) swim at 0.15 to 0.75 m/s. Catch the fastest."
 tasks = Array[ExtResource("task")]([SubResource("catch_fastest")])
-look = ExtResource("lagoon")
 show_time_on_correct = true
 reward_table = SubResource("rewards")

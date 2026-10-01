@@ -1,0 +1,218 @@
+[gd_resource type="Resource" script_class="Experiment" format=3]
+
+[ext_resource type="Script" path="res://river/scripts/experiment.gd" id="experiment"]
+[ext_resource type="Script" path="res://river/scripts/river_task.gd" id="task"]
+[ext_resource type="Script" path="res://river/scripts/river_object_config.gd" id="object"]
+[ext_resource type="Resource" path="res://river/skins/lagoon/lagoon_skin.tres" id="lagoon"]
+[ext_resource type="PackedScene" path="res://river/art/ducks/duck_01_standard.glb" id="standard_model"]
+[ext_resource type="Texture2D" path="res://river/art/ducks/pictures/standard.png" id="standard_picture"]
+[ext_resource type="PackedScene" path="res://river/art/ducks/duck_02_round_head.glb" id="round_head_model"]
+[ext_resource type="Texture2D" path="res://river/art/ducks/pictures/round_head.png" id="round_head_picture"]
+[ext_resource type="PackedScene" path="res://river/art/ducks/duck_03_long_beak.glb" id="long_beak_model"]
+[ext_resource type="Texture2D" path="res://river/art/ducks/pictures/long_beak.png" id="long_beak_picture"]
+[ext_resource type="PackedScene" path="res://river/art/ducks/duck_04_raised_tail.glb" id="raised_tail_model"]
+[ext_resource type="Texture2D" path="res://river/art/ducks/pictures/raised_tail.png" id="raised_tail_picture"]
+[ext_resource type="PackedScene" path="res://river/art/ducks/duck_05_small_wings.glb" id="small_wings_model"]
+[ext_resource type="Texture2D" path="res://river/art/ducks/pictures/small_wings.png" id="small_wings_picture"]
+[ext_resource type="PackedScene" path="res://river/art/ducks/duck_06_tall_head.glb" id="tall_head_model"]
+[ext_resource type="Texture2D" path="res://river/art/ducks/pictures/tall_head.png" id="tall_head_picture"]
+
+[sub_resource type="Resource" id="still_standard"]
+script = ExtResource("object")
+name = &"standard"
+scene = ExtResource("standard_model")
+picture = ExtResource("standard_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 0.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="still_round_head"]
+script = ExtResource("object")
+name = &"round_head"
+scene = ExtResource("round_head_model")
+picture = ExtResource("round_head_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 0.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="still_long_beak"]
+script = ExtResource("object")
+name = &"long_beak"
+scene = ExtResource("long_beak_model")
+picture = ExtResource("long_beak_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 0.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="still_raised_tail"]
+script = ExtResource("object")
+name = &"raised_tail"
+scene = ExtResource("raised_tail_model")
+picture = ExtResource("raised_tail_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 0.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="still_small_wings"]
+script = ExtResource("object")
+name = &"small_wings"
+scene = ExtResource("small_wings_model")
+picture = ExtResource("small_wings_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 0.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="still_tall_head"]
+script = ExtResource("object")
+name = &"tall_head"
+scene = ExtResource("tall_head_model")
+picture = ExtResource("tall_head_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 0.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="spin_standard"]
+script = ExtResource("object")
+name = &"standard"
+scene = ExtResource("standard_model")
+picture = ExtResource("standard_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 400.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="spin_round_head"]
+script = ExtResource("object")
+name = &"round_head"
+scene = ExtResource("round_head_model")
+picture = ExtResource("round_head_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 400.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="spin_long_beak"]
+script = ExtResource("object")
+name = &"long_beak"
+scene = ExtResource("long_beak_model")
+picture = ExtResource("long_beak_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 400.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="spin_raised_tail"]
+script = ExtResource("object")
+name = &"raised_tail"
+scene = ExtResource("raised_tail_model")
+picture = ExtResource("raised_tail_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 400.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="spin_small_wings"]
+script = ExtResource("object")
+name = &"small_wings"
+scene = ExtResource("small_wings_model")
+picture = ExtResource("small_wings_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 400.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="spin_tall_head"]
+script = ExtResource("object")
+name = &"tall_head"
+scene = ExtResource("tall_head_model")
+picture = ExtResource("tall_head_picture")
+size = 0.9
+swim_speed_m_per_s = 0.0
+spin_speed_deg_per_s = 400.0
+float_height = 0.4
+
+[sub_resource type="Resource" id="round1_still"]
+script = ExtResource("task")
+name = &"round1_still"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("still_standard"), SubResource("still_round_head"), SubResource("still_long_beak"), SubResource("still_raised_tail"), SubResource("still_small_wings"), SubResource("still_tall_head")])
+reference_object = SubResource("still_standard")
+retry_until_correct = true
+
+[sub_resource type="Resource" id="round2_spin"]
+script = ExtResource("task")
+name = &"round2_spin"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("spin_standard"), SubResource("spin_round_head"), SubResource("spin_long_beak"), SubResource("spin_raised_tail"), SubResource("spin_small_wings"), SubResource("spin_tall_head")])
+reference_object = SubResource("spin_round_head")
+retry_until_correct = true
+
+[sub_resource type="Resource" id="round3_still"]
+script = ExtResource("task")
+name = &"round3_still"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("still_standard"), SubResource("still_round_head"), SubResource("still_long_beak"), SubResource("still_raised_tail"), SubResource("still_small_wings"), SubResource("still_tall_head")])
+reference_object = SubResource("still_long_beak")
+retry_until_correct = true
+
+[sub_resource type="Resource" id="round4_spin"]
+script = ExtResource("task")
+name = &"round4_spin"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("spin_standard"), SubResource("spin_round_head"), SubResource("spin_long_beak"), SubResource("spin_raised_tail"), SubResource("spin_small_wings"), SubResource("spin_tall_head")])
+reference_object = SubResource("spin_raised_tail")
+retry_until_correct = true
+
+[sub_resource type="Resource" id="round5_still"]
+script = ExtResource("task")
+name = &"round5_still"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("still_standard"), SubResource("still_round_head"), SubResource("still_long_beak"), SubResource("still_raised_tail"), SubResource("still_small_wings"), SubResource("still_tall_head")])
+reference_object = SubResource("still_small_wings")
+retry_until_correct = true
+
+[sub_resource type="Resource" id="round6_spin"]
+script = ExtResource("task")
+name = &"round6_spin"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("spin_standard"), SubResource("spin_round_head"), SubResource("spin_long_beak"), SubResource("spin_raised_tail"), SubResource("spin_small_wings"), SubResource("spin_tall_head")])
+reference_object = SubResource("spin_tall_head")
+retry_until_correct = true
+
+[sub_resource type="Resource" id="round7_still"]
+script = ExtResource("task")
+name = &"round7_still"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("still_standard"), SubResource("still_round_head"), SubResource("still_long_beak"), SubResource("still_raised_tail"), SubResource("still_small_wings"), SubResource("still_tall_head")])
+reference_object = SubResource("still_standard")
+retry_until_correct = true
+
+[sub_resource type="Resource" id="round8_spin"]
+script = ExtResource("task")
+name = &"round8_spin"
+question_text = "Catch this one!"
+correct_answer_rule = "same as reference"
+objects_in_trial = Array[ExtResource("object")]([SubResource("spin_standard"), SubResource("spin_round_head"), SubResource("spin_long_beak"), SubResource("spin_raised_tail"), SubResource("spin_small_wings"), SubResource("spin_tall_head")])
+reference_object = SubResource("spin_round_head")
+retry_until_correct = true
+
+[resource]
+script = ExtResource("experiment")
+description = "Six rubber ducks, still and spinning rounds. Spear the pictured one."
+tasks = Array[ExtResource("task")]([SubResource("round1_still"), SubResource("round2_spin"), SubResource("round3_still"), SubResource("round4_spin"), SubResource("round5_still"), SubResource("round6_spin"), SubResource("round7_still"), SubResource("round8_spin")])
+look = ExtResource("lagoon")
+correct_text = "Yes!"
+end_text = "Thank you!"

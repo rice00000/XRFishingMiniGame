@@ -18,6 +18,7 @@ extends Node3D
 @export var harpoon: Harpoon
 @export var task_ui: TaskUI
 @export var inventory: Inventory
+@export var collection: CollectionBoard
 @export var logger: TrialLogger
 @export var menu: ExperimentMenu
 
@@ -29,6 +30,8 @@ extends Node3D
 @export var aim_controller: XRController3D
 ## Controller whose menu button opens the experiment menu in XR.
 @export var menu_controller: XRController3D
+## Controller (grip pose) the spear sits in while the grip button holds it in XR.
+@export var hand_controller: XRController3D
 ## Camera used for aiming on PC / Mac.
 @export var camera: Camera3D
 
@@ -54,7 +57,7 @@ var _scenery: Node
 
 func _ready() -> void:
 	harpoon.fired.connect(_on_harpoon_fired)
-	inventory.changed.connect(func(_item: StringName, _total: int) -> void: task_ui.show_inventory(inventory.items))
+	harpoon.launched.connect(GameAudio.play.bind(&"throw"))
 	menu.chosen.connect(start_experiment)
 	# Deferred so Main has decided whether XR is running.
 	_boot.call_deferred()
@@ -95,7 +98,7 @@ func show_menu() -> void:
 	if logger.is_running():
 		logger.end_session("aborted", inventory.items)
 	_stop()
-	task_ui.show_inventory({})
+	collection.reset(false)
 	menu.open(Experiment.load_all())
 
 
@@ -117,7 +120,7 @@ func start_experiment(p_experiment: Experiment) -> void:
 		return
 	_trial = -1
 	inventory.clear()
-	task_ui.show_inventory(inventory.items)
+	collection.reset(experiment.reward_table != null)
 	logger.start_session(experiment, menu.participant_label(), session_seed, _trials)
 	_next_trial()
 
@@ -152,6 +155,7 @@ func _next_trial() -> void:
 	harpoon.candidates = objects
 	var preview: RiverObjectConfig = current_task.reference_object if current_task.show_reference_model else null
 	task_ui.show_task(current_task.question_text, current_task.get_reference_image(), preview)
+	GameAudio.speak(current_task.get_question_audio())
 
 	_trial_start_usec = Time.get_ticks_usec()
 	logger.begin_trial(_trial, current_task, trial_seed, objects, targets, _trial_start_usec)
@@ -176,8 +180,13 @@ func _on_harpoon_fired(target: RiverObject, time_usec: int, aim_origin: Vector3,
 	if run != _run:
 		return
 	target.visible = false
+	# Independent of the reward table: a right catch plays "reward", a wrong one "wrong".
+	GameAudio.play(&"reward" if correct else &"wrong")
 	if experiment.reward_table:
 		var rewards := experiment.reward_table.rewards_for(target, correct)
+		if not rewards.is_empty():
+			collection.add(target.config)
+			collection.show_success(experiment.success_text, experiment.success_seconds)
 		for item in rewards:
 			inventory.add(item, rewards[item])
 		logger.log_rewards(rewards)
@@ -229,6 +238,7 @@ func _end_experiment() -> void:
 ## Clears the river and the panels. Pending awaits of the old run are dropped.
 func _stop() -> void:
 	_run += 1
+	GameAudio.stop_voice()
 	_set_accepting(false)
 	current_task = null
 	spawner.clear()
@@ -246,7 +256,13 @@ func _make_input() -> AimInput:
 		var xr := XRAimInput.new()
 		xr.controller = aim_controller
 		xr.back_controller = menu_controller
+		xr.hand_controller = hand_controller
 		input = xr
+		if menu_controller:
+			var help := HelpCard.new()
+			help.name = "HelpCard"
+			help.controller = menu_controller
+			menu_controller.add_child(help)
 	else:
 		var desktop := DesktopAimInput.new()
 		desktop.camera = camera
@@ -263,6 +279,7 @@ func _make_input() -> AimInput:
 func _apply_skin(skin: RiverSkin) -> void:
 	spawner.skin = skin
 	task_ui.skin = skin
+	collection.skin = skin
 	harpoon.spear_scene = skin.spear_scene if skin else null
 	if _scenery:
 		# Removed right away so its Scenery restores the environment before the next one copies its own.

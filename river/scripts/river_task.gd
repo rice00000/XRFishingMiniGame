@@ -127,6 +127,13 @@ func describe_rule() -> String:
 	return correct_answer_rule
 
 
+## The question read out loud (res://river/audio/voice/q_<md5 of question_text>.wav, made
+## by tools/generate_voice.py), or null if it hasn't been generated.
+func get_question_audio() -> AudioStream:
+	var path := "res://river/audio/voice/q_%s.wav" % question_text.md5_text()
+	return load(path) as AudioStream if ResourceLoader.exists(path) else null
+
+
 func get_reference_image() -> Texture2D:
 	if reference_image:
 		return reference_image

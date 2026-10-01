@@ -1,7 +1,7 @@
 class_name RiverObject
 extends Node3D
 ## A spawned object in the river, created by RiverSpawner from a RiverObjectConfig.
-## Moves along the parent's local X axis and spins its visual. No physics.
+## Swims back and forth along the parent's local X axis and spins its visual. No physics.
 
 var config: RiverObjectConfig
 var pool_id: StringName
@@ -18,6 +18,8 @@ var _base_basis := Basis.IDENTITY
 var _spin_axis := Vector3.ZERO
 var _angle := 0.0
 var _wrap_half_length := INF
+## +1 = moving the way `swim_speed_m_per_s` points, -1 = turned around at a river end.
+var _direction := 1.0
 
 
 func setup(p_config: RiverObjectConfig, p_pool_id: StringName, p_index: int, wrap_half_length: float, skin_scene: PackedScene = null) -> void:
@@ -46,12 +48,12 @@ func _process(delta: float) -> void:
 		return
 
 	if config.swim_speed_m_per_s != 0.0:
-		position.x += config.swim_speed_m_per_s * delta
-		# Leave one end of the river, come back in at the other.
-		if position.x > _wrap_half_length:
-			position.x -= 2.0 * _wrap_half_length
-		elif position.x < -_wrap_half_length:
-			position.x += 2.0 * _wrap_half_length
+		position.x += config.swim_speed_m_per_s * _direction * delta
+		# Swim back and forth: turn around at each end of the river.
+		if position.x > _wrap_half_length or position.x < -_wrap_half_length:
+			position.x = clampf(position.x, -_wrap_half_length, _wrap_half_length)
+			_direction = -_direction
+			rotation.y = 0.0 if _direction > 0.0 else PI
 
 	if config.spin_speed_deg_per_s != 0.0 and _spin_axis != Vector3.ZERO:
 		_angle = fmod(_angle + deg_to_rad(config.spin_speed_deg_per_s) * delta, TAU)

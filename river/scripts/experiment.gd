@@ -31,11 +31,14 @@ Next: add more tasks, extra_pools (distractors), reference_object / each_object_
 @export var wrong_text := "Not that one"
 @export var timeout_text := ""
 @export var end_text := "All done!"
+## Shown in a pill above the collection board when a catch is added to it. Empty = nothing.
+@export var success_text := "Success!"
+@export var success_seconds := 2.0
 @export var feedback_seconds := 1.5
 @export var pause_between_trials := 1.0
 
 @export_group("Advanced")
-## Items granted per catch, shown to the player as a small inventory.
+## Items granted per catch. A catch that grants something is added to the collection board.
 @export var reward_table: RewardTable
 ## Seed for the whole run. -1 = new random seed each run.
 ## The seed is always logged, so any run can be replayed by entering it here.
@@ -103,7 +106,7 @@ func problems() -> PackedStringArray:
 				continue
 			for cfg in pool.get_objects():
 				var key := cfg.get_id()
-				if seen.has(key) and seen[key] != cfg and cfg.variant_of == &"":
+				if seen.has(key) and seen[key] != cfg and cfg.variant_of == &"" and _looks_different(seen[key], cfg):
 					result.append("two different objects share the name '%s'" % key)
 				seen[key] = cfg
 	return result
@@ -152,3 +155,8 @@ static func load_all(folder := FOLDER) -> Array[Experiment]:
 		if experiment:
 			result.append(experiment)
 	return result
+
+
+## Same name but only the motion differs (e.g. a still and a spinning copy of one duck) is fine.
+func _looks_different(a: RiverObjectConfig, b: RiverObjectConfig) -> bool:
+	return a.scene != b.scene or a.shape != b.shape or a.color != b.color or a.size != b.size

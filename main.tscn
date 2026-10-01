@@ -638,8 +638,9 @@ to toggle passthrough!"
 tracker = &"right_hand"
 pose = &"aim"
 
-[node name="RiverGame" parent="." unique_id=1740212234 node_paths=PackedStringArray("aim_controller", "menu_controller", "camera") instance=ExtResource("20_river")]
+[node name="RiverGame" parent="." unique_id=1740212234 node_paths=PackedStringArray("aim_controller", "menu_controller", "hand_controller", "camera") instance=ExtResource("20_river")]
 aim_controller = NodePath("../XROrigin3D/XRAimRight")
 menu_controller = NodePath("../XROrigin3D/XRControllerLeft")
+hand_controller = NodePath("../XROrigin3D/XRControllerRight")
 camera = NodePath("../XROrigin3D/XRCamera3D")
 hide_with_scenery = Array[NodePath]([NodePath("../Floor"), NodePath("../Table"), NodePath("../PassthroughTutorialText"), NodePath("../SunLight")])

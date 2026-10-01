@@ -7,8 +7,11 @@ river/
   experiments/       one file per experiment; the in-game menu lists this folder
   scripts/           gameplay (experiment, rules, spawner, harpoon, menu, logger, ...)
   scripts/input/     AimInput + XR and PC/Mac implementations
+  scripts/ui/        BeachStyle (shared colours) and the rounded-panel shader
   scripts/skin/      RiverSkin, Scenery, SkinModel (visual-only layer)
   skins/lagoon/      the lagoon look: scenery, water/sand shaders, model wrappers
+  audio/sfx/         sound effects, named for what they do (throw, ui_button, reward)
+  audio/voice/       spoken task questions (made by tools/generate_voice.py)
   art/               downloaded CC0 models, character pictures, sky (see art/CREDITS.md)
   tools/             reference_image_maker (renders PNGs of objects)
 ```
@@ -18,8 +21,10 @@ Press **F5** and the experiment menu appears. Aim at an experiment and fire to s
 
 | Where | Aim | Fire | Menu |
 |---|---|---|---|
-| VR headset (Quest, SteamVR) | right controller (`XRAimRight`, aim pose) | trigger | left controller menu button |
+| VR headset (Quest, SteamVR) | right controller (`XRAimRight`, aim pose) | trigger; **or** throw the spear by hand: hold grip, swing, let go | left controller menu button |
 | PC / Mac | mouse, **or** arrow keys / WASD, **or** gamepad left stick | left click, Space, Enter, gamepad A | Esc, gamepad Start |
+
+In VR, a small **Y · Help** tag floats on the left controller. Press **Y** to open a card above the left hand that lists every control (aim, shoot, throw, menu, starting an experiment); it turns to face you, so lift the hand closer to read it bigger. Press Y again to close it. Edit the text in `scripts/help_card.gd`.
 
 Remap the PC/Mac keys in **Project Settings > Input Map** (`harpoon_fire`, `harpoon_aim_*`, `harpoon_menu`). If those actions are missing, default bindings are added at runtime.
 
@@ -52,7 +57,7 @@ Each Inspector section is ordered from common to rare; hover a field for its exp
 
 | | Main fields | Folded groups |
 |---|---|---|
-| **Experiment** | `description`, `tasks`, `shuffle_trial_order`, `look` | Feedback (texts, timings), Advanced (`reward_table`, `fixed_seed`) |
+| **Experiment** | `description`, `tasks`, `shuffle_trial_order`, `look` | Feedback (texts, timings, `success_text`), Advanced (`reward_table`, `fixed_seed`) |
 | **Task** | `question_text`, `correct_answer_rule`, `correct_tag`, `objects_in_trial`, `objects_per_trial` (0 = all), `repeat_times` | Reference (`reference_object`, `each_object_as_reference`, `show_reference_model`, `reference_image`), Trial (`time_limit`, `retry_until_correct`), Advanced (`name`, `extra_pools`, `custom_rule`, `fixed_layout_seed`) |
 | **Object** | `name`, `tags` | Look (`shape`, `color`, `size`, `scene`, `picture`, `show_spin_marker`), Default motion (`swim_speed_m_per_s`, `spin_speed_deg_per_s`, `float_height`), Independent variable (`variable`, `variable_values`), Spin direction (`spin_axis`, `start_tilt_degrees`), Model import fixes, Selection (`selection_radius_m`) |
 
@@ -74,6 +79,26 @@ A `name` is only a label that shows in the logs, and rewards and skin exceptions
 - `Scenery` copies its `environment` (sky, fog, colour grading) onto the world environment while it is loaded, and restores the original when removed.
 - Logs record which visual each object actually showed (`visual`).
 
+## Collection board and look
+When an experiment has a `reward_table`, a **collection board** floats to the left of the task panel. Each catch that grants a reward adds a card for the caught object (its `picture` if it has one, else its model) with a count, so all fish of one `variable` ("fish_0.15", "fish_0.3", ...) share one "fish" card. A "Success!" pill shows above it for `success_seconds` (2 s); set `success_text` empty to turn it off. The board starts empty each run and is hidden in experiments without rewards. Move it with the **CollectionBoard** node in `river_game.tscn`; the `Inventory` item counts (`shell`) are still logged but no longer shown.
+
+The UI (task panel, menu, board) shares one beach look: deep-sea panels with a sand edge, cream text, sun-yellow highlight. Change the colours in `scripts/ui/beach_style.gd`. Contrast stays high on purpose for low-vision players.
+
+## Audio
+Every sound has its own bus in `default_bus_layout.tres`, so you can mix each one in the editor's **Audio** tab (bottom panel), add effects, or mute it:
+
+| Bus | Plays | When |
+|---|---|---|
+| `Voice` | the task's `question_text`, spoken | when each trial starts; replaced by the next question, stopped when you go back to the menu |
+| `Throw` | `audio/sfx/throw.wav` | every trigger shot, and every VR throw with a real swing (faster than 1.5 m/s) |
+| `UI` | `audio/sfx/ui_button.wav` | any menu button press |
+| `Reward` | `audio/sfx/reward.wav` | the right object is speared (no reward table needed) |
+| `Wrong` | `audio/sfx/wrong.wav` | a wrong object is speared |
+
+All go to `Master`. The `GameAudio` autoload (`scripts/game_audio.gd`) owns the players; to add a sound, add a line to its `SOUNDS` and a bus in the Audio tab.
+
+**Voice files.** `audio/voice/q_<md5 of the question>.wav` is each task's `question_text` read by Windows' Microsoft Zira voice (same question, same file). After you add a task or change a question, run `python tools/generate_voice.py` (`--voice "Microsoft David Desktop"` for another voice). Windows only; the generated `.wav` files are normal project assets, so Mac and the Quest just play them. A question without a voice file is silent.
+
 ## Rules
 Speeds are compared by absolute value, and ties all count as correct. "same as reference" compares object ids.
 
@@ -88,6 +113,7 @@ Speeds are compared by absolute value, and ties all count as correct. "same as r
 ## Harpoon (fixed input conditions)
 - Selection is geometric and deterministic. The picked object is the one whose pick sphere is at the smallest angle from the aim ray, as long as that angle is within `assist_angle`. There is no physics, spread or recoil.
 - On confirm the target is chosen and `fired` is emitted first. The spear animation plays after that and never changes the result.
+- **VR throw (the trigger stays as it is):** hold the right grip and the spear sits in your palm (`XRControllerRight`), held `grip_distance` behind the tip and pointing along the aim ray, roughly square to the handle, like the resting spear. Let go and it leaves with your hand's velocity (averaged over `velocity_window`) times `throw_strength` (1.8, because a weightless VR throw feels short; distance grows with its square, so a 5 m/s swing flies about 9 m). From there it is plain physics: gravity, the tip turns into the flight path like a javelin, and it only hits a fish whose pick sphere the tip actually passes through. No aim assist, no reticle help: a real miss is a miss. You can also stab without throwing: while held, a spear tip that touches a fish catches it (e.g. walk into the water). A hit sticks in the fish for `stuck_time` and is logged like a trigger selection; a spear that reaches the water (`water_height`) splashes, slows and sinks, and after `sink_time` is logged as a miss. Response time is the moment the hand opened, and the logged aim ray is the release point and direction. All settings are in the **Throw (VR grip)** group on **Harpoon**; set `grab_action` on `XRAimInput` empty to turn throwing off. PC / Mac input is unchanged.
 
 ## Logs
 Everything goes to `user://trial_logs/`. The menu shows the full path at the bottom.
